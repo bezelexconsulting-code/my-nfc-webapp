@@ -5,39 +5,24 @@ const filePath = path.join(process.cwd(), "data", "tags.json");
 
 export async function GET(req, { params }) {
   const { slug } = params;
-  const data = fs.existsSync(filePath)
-    ? JSON.parse(fs.readFileSync(filePath))
-    : [];
-
+  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
   const tag = data.find(t => t.slug === slug);
-  if (!tag) return new Response("Tag not found", { status: 404 });
 
-  // Never return password to public
-  const { password, ...publicData } = tag;
-  return new Response(JSON.stringify(publicData), { status: 200 });
+  if (!tag) return new Response(JSON.stringify({ error: "Tag not found" }), { status: 404 });
+
+  return new Response(JSON.stringify(tag), { status: 200 });
 }
 
 export async function PUT(req, { params }) {
   const { slug } = params;
   const body = await req.json();
+  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
-  const data = fs.existsSync(filePath)
-    ? JSON.parse(fs.readFileSync(filePath))
-    : [];
+  const index = data.findIndex(t => t.slug === slug);
+  if (index === -1) return new Response(JSON.stringify({ error: "Tag not found" }), { status: 404 });
 
-  const tagIndex = data.findIndex(t => t.slug === slug);
-  if (tagIndex === -1)
-    return new Response("Tag not found", { status: 404 });
-
-  // Only update editable fields (name, phones, address, password)
-  const allowedFields = ["name", "phone1", "phone2", "address", "password", "claimed"];
-  allowedFields.forEach(field => {
-    if (body[field] !== undefined) {
-      data[tagIndex][field] = body[field];
-    }
-  });
+  data[index] = { ...data[index], ...body };
 
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-
-  return new Response(JSON.stringify(data[tagIndex]), { status: 200 });
+  return new Response(JSON.stringify(data[index]), { status: 200 });
 }

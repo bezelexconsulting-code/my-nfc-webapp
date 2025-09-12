@@ -6,7 +6,7 @@ export default function AdminPage() {
   const [tags, setTags] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
-  const adminPassword = supersecret123
+  const adminPassword = 
     typeof window !== "undefined"
       ? process.env.NEXT_PUBLIC_ADMIN_PASSWORD
       : null;

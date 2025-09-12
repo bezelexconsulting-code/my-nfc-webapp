@@ -1,6 +1,11 @@
 [
   {
     "slug": "example-tag",
-    "claimed": false
+    "claimed": false,
+    "name": "",
+    "phone1": "",
+    "phone2": "",
+    "address": "",
+    "password": ""
   }
 ]

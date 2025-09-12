@@ -1,43 +1,86 @@
-import fs from "fs";
-import path from "path";
+"use client";
 
-const filePath = path.join(process.cwd(), "data", "tags.json");
+import { useState, useEffect } from "react";
 
-export async function GET(req, { params }) {
-  const { slug } = params;
-  const data = fs.existsSync(filePath)
-    ? JSON.parse(fs.readFileSync(filePath))
-    : [];
+export default function AdminPage() {
+  const [tags, setTags] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const adminPassword = supersecret123
+    typeof window !== "undefined"
+      ? process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+      : null;
 
-  const tag = data.find(t => t.slug === slug);
-  if (!tag) return new Response("Tag not found", { status: 404 });
+  useEffect(() => {
+    if (isLoggedIn) fetchTags();
+  }, [isLoggedIn]);
 
-  // Never return password to public
-  const { password, ...publicData } = tag;
-  return new Response(JSON.stringify(publicData), { status: 200 });
-}
+  async function fetchTags() {
+    const res = await fetch("/api/tags");
+    const data = await res.json();
+    setTags(data);
+  }
 
-export async function PUT(req, { params }) {
-  const { slug } = params;
-  const body = await req.json();
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (passwordInput === adminPassword) setIsLoggedIn(true);
+    else alert("Incorrect password!");
+  };
 
-  const data = fs.existsSync(filePath)
-    ? JSON.parse(fs.readFileSync(filePath))
-    : [];
+  if (!isLoggedIn)
+    return (
+      <div className="p-4 max-w-md mx-auto">
+        <h1 className="text-xl font-bold mb-4">Admin Login</h1>
+        <form onSubmit={handleLogin}>
+          <input
+            type="password"
+            placeholder="Admin password"
+            className="border p-2 w-full rounded mb-2"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+          />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            Login
+          </button>
+        </form>
+      </div>
+    );
 
-  const tagIndex = data.findIndex(t => t.slug === slug);
-  if (tagIndex === -1)
-    return new Response("Tag not found", { status: 404 });
-
-  // Only update editable fields (name, phones, address, password)
-  const allowedFields = ["name", "phone1", "phone2", "address", "password", "claimed"];
-  allowedFields.forEach(field => {
-    if (body[field] !== undefined) {
-      data[tagIndex][field] = body[field];
-    }
-  });
-
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-
-  return new Response(JSON.stringify(data[tagIndex]), { status: 200 });
+  return (
+    <div className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-xl font-bold mb-4">Admin Dashboard (Read-Only)</h1>
+      <button
+        onClick={() => setIsLoggedIn(false)}
+        className="bg-red-500 text-white px-4 py-2 rounded mb-4"
+      >
+        Logout
+      </button>
+      <table className="w-full border">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="p-2 border">Slug</th>
+            <th className="p-2 border">Owner</th>
+            <th className="p-2 border">Name</th>
+            <th className="p-2 border">Phone 1</th>
+            <th className="p-2 border">Phone 2</th>
+            <th className="p-2 border">Address</th>
+            <th className="p-2 border">Claimed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tags.map((tag) => (
+            <tr key={tag.slug} className="border">
+              <td className="p-2 border">{tag.slug}</td>
+              <td className="p-2 border">{tag.owner || "-"}</td>
+              <td className="p-2 border">{tag.name || "-"}</td>
+              <td className="p-2 border">{tag.phone1 || "-"}</td>
+              <td className="p-2 border">{tag.phone2 || "-"}</td>
+              <td className="p-2 border">{tag.address || "-"}</td>
+              <td className="p-2 border">{tag.claimed ? "Yes" : "No"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }

@@ -17,6 +17,6 @@
     "phone2": "",
     "address": "",
     "password": "",
-    "claimed": false
+    "claimed": true
   }
 ]

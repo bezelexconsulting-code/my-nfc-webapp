@@ -1,22 +1,6 @@
 [
   {
-    "slug": "tag001",
-    "owner": "",
-    "name": "",
-    "phone1": "",
-    "phone2": "",
-    "address": "",
-    "password": "",
-    "claimed": false
-  },
-  {
-    "slug": "tag002",
-    "owner": "",
-    "name": "",
-    "phone1": "",
-    "phone2": "",
-    "address": "",
-    "password": "",
+    "slug": "example-tag",
     "claimed": false
   }
 ]

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function ClientTagPage({ params }) {
   const [tag, setTag] = useState(null);
@@ -8,28 +8,68 @@ export default function ClientTagPage({ params }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`/api/${params.slug}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTag(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [params.slug]);
+    let mounted = true;
+
+    (async () => {
+      try {
+        const p = await params;
+        const slug = p?.slug;
+        if (!slug) {
+          if (mounted) setLoading(false);
+          return;
+        }
+
+        const res = await fetch(`/api/${slug}`);
+        if (!res.ok) {
+          if (mounted) setLoading(false);
+          return;
+        }
+
+        const data = await res.json();
+        if (mounted) {
+          setTag(data);
+          setForm({
+            name: data.name || "",
+            phone1: data.phone1 || "",
+            phone2: data.phone2 || "",
+            address: data.address || "",
+            password: "",
+          });
+          setLoading(false);
+        }
+      } catch (err) {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [params]);
 
   async function save() {
     setError("");
-    const res = await fetch(`/api/${params.slug}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      const updated = await res.json();
-      setTag(updated);
-    } else {
-      const text = await res.text();
-      setError(text);
+    try {
+      const p = await params;
+      const slug = p?.slug;
+      if (!slug) return setError("Missing tag slug");
+
+      const res = await fetch(`/api/${slug}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setTag(updated);
+        setError("");
+      } else {
+        const text = await res.text();
+        setError(text);
+      }
+    } catch (err) {
+      setError("Failed to save tag");
     }
   }
 
@@ -37,7 +77,7 @@ export default function ClientTagPage({ params }) {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Edit Tag: {params.slug}</h1>
+      <h1>Edit Tag: {tag?.slug || ""}</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

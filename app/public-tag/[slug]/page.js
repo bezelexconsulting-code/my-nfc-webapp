@@ -56,11 +56,29 @@ export default function PublicTagPage({ params }) {
   if (!tag) return <p>Tag not found</p>;
 
   return (
-    <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
-      <h1>{tag.name || "Tag"}</h1>
-      <p><strong>Contact:</strong> {tag.phone1 || "Not available"}</p>
-      {tag.phone2 && <p><strong>Alt. Contact:</strong> {tag.phone2}</p>}
-      <p><strong>Address:</strong> {tag.address || "Not available"}</p>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+        <h1 className="mb-6 text-center text-2xl font-bold">{tag.name || "NFC Tag"}</h1>
+        
+        <div className="space-y-4">
+          <div className="rounded-md bg-blue-50 p-4">
+            <h2 className="mb-2 text-lg font-medium text-blue-800">Contact Information</h2>
+            <p className="text-gray-700">
+              <strong>Primary:</strong> {tag.phone1 || "Not available"}
+            </p>
+            {tag.phone2 && (
+              <p className="text-gray-700">
+                <strong>Secondary:</strong> {tag.phone2}
+              </p>
+            )}
+          </div>
+          
+          <div className="rounded-md bg-green-50 p-4">
+            <h2 className="mb-2 text-lg font-medium text-green-800">Location</h2>
+            <p className="text-gray-700">{tag.address || "Address not available"}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

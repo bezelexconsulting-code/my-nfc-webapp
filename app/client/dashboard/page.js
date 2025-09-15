@@ -1,104 +1,219 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function login() {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, password }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setClient(data);
-    } else {
-      alert(data.error || "Login failed");
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setClient(data);
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch (err) {
+      setError("An error occurred during login");
+    } finally {
+      setLoading(false);
     }
   }
 
   async function updateTag(tagId, newData) {
-    const res = await fetch(`/api/tags/${tagId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newData),
-    });
-    if (res.ok) {
-      alert("Tag updated!");
-    } else {
-      alert("Update failed");
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/tags/${tagId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData),
+      });
+      
+      if (res.ok) {
+        // Update the client state with the updated tag
+        const updatedTag = await res.json();
+        setClient(prev => ({
+          ...prev,
+          tags: prev.tags.map(tag => tag.id === tagId ? updatedTag : tag)
+        }));
+      } else {
+        const errorData = await res.json();
+        setError(errorData.error || "Update failed");
+      }
+    } catch (err) {
+      setError("An error occurred while updating the tag");
+    } finally {
+      setLoading(false);
     }
   }
 
   if (!client) {
     return (
-      <main>
-        <h1>Login</h1>
-        <input
-          placeholder="Name"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={login}>Login</button>
-      </main>
+      <div className="flex min-h-screen flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-lg border p-6 shadow-md">
+          <h1 className="mb-6 text-2xl font-bold">Client Login</h1>
+          
+          {error && (
+            <div className="mb-4 rounded-md bg-red-50 p-3 text-red-500">
+              {error}
+            </div>
+          )}
+          
+          <div className="mb-4">
+            <label htmlFor="name" className="mb-1 block text-sm font-medium">
+              Username
+            </label>
+            <input
+              id="name"
+              type="text"
+              placeholder="Username"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded-md border p-2"
+            />
+          </div>
+          
+          <div className="mb-6">
+            <label htmlFor="password" className="mb-1 block text-sm font-medium">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-md border p-2"
+            />
+          </div>
+          
+          <button 
+            onClick={login} 
+            disabled={loading}
+            className="w-full rounded-md bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:bg-blue-300"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+          
+          <div className="mt-4 text-center text-sm">
+            Don't have an account?{" "}
+            <a href="/register" className="text-blue-600 hover:underline">
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <main>
-      <h1>Welcome {client.client.name}</h1>
-      <h2>Your Tags</h2>
-      {client.tags.map((tag) => (
-        <div key={tag.id} style={{ marginBottom: "1rem" }}>
-          <h3>{tag.slug}</h3>
-          <label>
-            Name:{" "}
-            <input
-              defaultValue={tag.name}
-              onBlur={(e) =>
-                updateTag(tag.id, { ...tag, name: e.target.value })
-              }
-            />
-          </label>
-          <br />
-          <label>
-            Phone 1:{" "}
-            <input
-              defaultValue={tag.phone1}
-              onBlur={(e) =>
-                updateTag(tag.id, { ...tag, phone1: e.target.value })
-              }
-            />
-          </label>
-          <br />
-          <label>
-            Phone 2:{" "}
-            <input
-              defaultValue={tag.phone2}
-              onBlur={(e) =>
-                updateTag(tag.id, { ...tag, phone2: e.target.value })
-              }
-            />
-          </label>
-          <br />
-          <label>
-            Address:{" "}
-            <input
-              defaultValue={tag.address}
-              onBlur={(e) =>
-                updateTag(tag.id, { ...tag, address: e.target.value })
-              }
-            />
-          </label>
+    <div className="container mx-auto p-4">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Welcome, {client.client.name}</h1>
+        <button 
+          onClick={() => setClient(null)} 
+          className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300"
+        >
+          Logout
+        </button>
+      </div>
+      
+      {error && (
+        <div className="mb-4 rounded-md bg-red-50 p-3 text-red-500">
+          {error}
         </div>
-      ))}
-    </main>
+      )}
+      
+      <h2 className="mb-4 text-xl font-semibold">Your Tags</h2>
+      
+      {client.tags.length === 0 ? (
+        <p className="text-gray-500">You don't have any tags yet.</p>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {client.tags.map((tag) => (
+            <div key={tag.id} className="rounded-lg border p-4 shadow-sm">
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-lg font-medium">{tag.slug}</h3>
+                <span className="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800">
+                  ID: {tag.id}
+                </span>
+              </div>
+              
+              <form className="space-y-3">
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    defaultValue={tag.name}
+                    onBlur={(e) => updateTag(tag.id, { ...tag, name: e.target.value })}
+                    className="w-full rounded-md border p-2 text-sm"
+                  />
+                </div>
+                
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    Phone 1
+                  </label>
+                  <input
+                    type="tel"
+                    defaultValue={tag.phone1}
+                    onBlur={(e) => updateTag(tag.id, { ...tag, phone1: e.target.value })}
+                    className="w-full rounded-md border p-2 text-sm"
+                  />
+                </div>
+                
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    Phone 2
+                  </label>
+                  <input
+                    type="tel"
+                    defaultValue={tag.phone2}
+                    onBlur={(e) => updateTag(tag.id, { ...tag, phone2: e.target.value })}
+                    className="w-full rounded-md border p-2 text-sm"
+                  />
+                </div>
+                
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    Address
+                  </label>
+                  <textarea
+                    defaultValue={tag.address}
+                    onBlur={(e) => updateTag(tag.id, { ...tag, address: e.target.value })}
+                    className="w-full rounded-md border p-2 text-sm"
+                    rows="2"
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <a 
+                    href={`/public-tag/${tag.slug}`} 
+                    target="_blank" 
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    View Public Page
+                  </a>
+                </div>
+              </form>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

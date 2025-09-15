@@ -80,13 +80,14 @@ export default function ClientTagPage({ params }) {
       <h1>Edit Tag: {tag?.slug || ""}</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
+      <input placeholder="Owner email (for claiming)" value={form.owner || ""} onChange={(e) => setForm({ ...form, owner: e.target.value })} />
       <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
       <input placeholder="Phone 1" value={form.phone1} onChange={(e) => setForm({ ...form, phone1: e.target.value })} />
       <input placeholder="Phone 2" value={form.phone2} onChange={(e) => setForm({ ...form, phone2: e.target.value })} />
       <input placeholder="Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
       <input type="password" placeholder="Password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
 
-      <button onClick={save}>Save</button>
+      <button onClick={save}>Save / Claim</button>
 
       {tag && (
         <pre style={{ marginTop: 20 }}>{JSON.stringify(tag, null, 2)}</pre>

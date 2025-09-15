@@ -37,13 +37,21 @@ export async function PUT(request, { params }) {
     }
 
     const existingTag = tags[tagIndex];
-
-    // If tag is not claimed yet, allow client to set password
+    // If tag is not claimed yet, require a password to claim and save owner
     if (!existingTag.claimed) {
+      if (!body.password) {
+        return new Response("Password required to claim tag", { status: 400 });
+      }
+
       tags[tagIndex] = {
         ...existingTag,
-        ...body,
+        name: body.name ?? existingTag.name,
+        phone1: body.phone1 ?? existingTag.phone1,
+        phone2: body.phone2 ?? existingTag.phone2,
+        address: body.address ?? existingTag.address,
         claimed: true,
+        password: body.password,
+        owner: body.owner || null,
       };
     } else {
       // If claimed, require correct password
@@ -63,7 +71,9 @@ export async function PUT(request, { params }) {
 
     await fs.writeFile(filePath, JSON.stringify(tags, null, 2));
 
-    return Response.json(tags[tagIndex]);
+    // Do not return password in the response
+    const { password, ...safeTag } = tags[tagIndex];
+    return Response.json(safeTag);
   } catch (error) {
     console.error("Error updating tag:", error);
     return new Response("Failed to update tag", { status: 500 });

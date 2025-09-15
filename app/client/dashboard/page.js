@@ -1,47 +1,104 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 
-export default function ClientDashboard() {
-  const [email, setEmail] = useState("");
-  const [tags, setTags] = useState([]);
-  const [error, setError] = useState("");
+export default function Dashboard() {
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [client, setClient] = useState(null);
 
-  async function loadTags() {
-    setError("");
-    try {
-      if (!email) return setError("Enter owner email to load tags");
-      const res = await fetch(`/api/tags?owner=${encodeURIComponent(email)}`);
-      if (!res.ok) {
-        setError("Failed to load tags");
-        setTags([]);
-        return;
-      }
-      const data = await res.json();
-      setTags(data);
-    } catch (err) {
-      setError("Failed to load tags");
-+      setTags([]);
+  async function login() {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, password }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setClient(data);
+    } else {
+      alert(data.error || "Login failed");
     }
   }
 
+  async function updateTag(tagId, newData) {
+    const res = await fetch(`/api/tags/${tagId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newData),
+    });
+    if (res.ok) {
+      alert("Tag updated!");
+    } else {
+      alert("Update failed");
+    }
+  }
+
+  if (!client) {
+    return (
+      <main>
+        <h1>Login</h1>
+        <input
+          placeholder="Name"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={login}>Login</button>
+      </main>
+    );
+  }
+
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Client Dashboard</h1>
-
-      <div style={{ marginBottom: 12 }}>
-        <input placeholder="Owner email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <button onClick={loadTags}>Load My Tags</button>
-      </div>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <ul>
-        {tags.map((tag) => (
-          <li key={tag.slug}>
-            <a href={`/tag/${tag.slug}`}>{tag.slug}</a> — {tag.name || "(no name)"}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main>
+      <h1>Welcome {client.client.name}</h1>
+      <h2>Your Tags</h2>
+      {client.tags.map((tag) => (
+        <div key={tag.id} style={{ marginBottom: "1rem" }}>
+          <h3>{tag.slug}</h3>
+          <label>
+            Name:{" "}
+            <input
+              defaultValue={tag.name}
+              onBlur={(e) =>
+                updateTag(tag.id, { ...tag, name: e.target.value })
+              }
+            />
+          </label>
+          <br />
+          <label>
+            Phone 1:{" "}
+            <input
+              defaultValue={tag.phone1}
+              onBlur={(e) =>
+                updateTag(tag.id, { ...tag, phone1: e.target.value })
+              }
+            />
+          </label>
+          <br />
+          <label>
+            Phone 2:{" "}
+            <input
+              defaultValue={tag.phone2}
+              onBlur={(e) =>
+                updateTag(tag.id, { ...tag, phone2: e.target.value })
+              }
+            />
+          </label>
+          <br />
+          <label>
+            Address:{" "}
+            <input
+              defaultValue={tag.address}
+              onBlur={(e) =>
+                updateTag(tag.id, { ...tag, address: e.target.value })
+              }
+            />
+          </label>
+        </div>
+      ))}
+    </main>
   );
 }

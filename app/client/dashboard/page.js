@@ -52,7 +52,12 @@ export default function Dashboard() {
       const res = await fetch(`/api/tags/${tagId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newData),
+        body: JSON.stringify({ 
+            name: newData.name,
+            phone1: newData.phone1,
+            phone2: newData.phone2,
+            address: newData.address
+        }),
       });
       
       if (res.ok) {
@@ -227,19 +232,6 @@ export default function Dashboard() {
                     onChange={(e) => handleInputChange(tag.id, 'address', e.target.value)}
                     className="w-full rounded-md border p-2 text-sm"
                     rows="2"
-                  />
-                </div>
-                
-                <div>
-                  <label className="mb-1 block text-sm font-medium">
-                    URL (Tappable Link)
-                  </label>
-                  <input
-                    type="url"
-                    value={tagForms[tag.id]?.url || ""}
-                    placeholder="https://example.com"
-                    onChange={(e) => handleInputChange(tag.id, 'url', e.target.value)}
-                    className="w-full rounded-md border p-2 text-sm"
                   />
                 </div>
 

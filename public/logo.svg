@@ -1,0 +1,112 @@
+<svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Enhanced gradients for 3D depth -->
+    <radialGradient id="orangeGradient" cx="0.4" cy="0.3" r="1.2">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="30%" stop-color="#FCD34D"/>
+      <stop offset="70%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </radialGradient>
+    
+    <linearGradient id="darkTealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#374151"/>
+      <stop offset="30%" stop-color="#1F2937"/>
+      <stop offset="70%" stop-color="#0F4C3A"/>
+      <stop offset="100%" stop-color="#064E3B"/>
+    </linearGradient>
+    
+    <linearGradient id="lightTealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="30%" stop-color="#10B981"/>
+      <stop offset="70%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#065F46"/>
+    </linearGradient>
+    
+    <!-- Enhanced shadow filters -->
+    <filter id="dropShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="3" dy="6" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.3"/>
+      <feComposite in2="offset" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.2"/>
+      <feComposite in2="offset" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Text path -->
+    <path id="textcircle" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"/>
+  </defs>
+  
+  <!-- Main circular background with enhanced gradient -->
+  <circle cx="100" cy="100" r="88" fill="url(#orangeGradient)" filter="url(#dropShadow)"/>
+  
+  <!-- First flowing bird shape (top-left to center-right) -->
+  <path d="M 30 60
+           C 20 45, 25 30, 45 35
+           C 65 40, 85 50, 100 65
+           C 115 80, 130 95, 140 115
+           C 150 135, 145 155, 125 150
+           C 105 145, 85 135, 70 120
+           C 55 105, 45 85, 40 70
+           C 35 55, 30 60, 30 60 Z" 
+        fill="url(#darkTealGradient)" 
+        filter="url(#innerShadow)"/>
+  
+  <!-- Second flowing bird shape (bottom-right to center-left) -->
+  <path d="M 170 140
+           C 180 155, 175 170, 155 165
+           C 135 160, 115 150, 100 135
+           C 85 120, 70 105, 60 85
+           C 50 65, 55 45, 75 50
+           C 95 55, 115 65, 130 80
+           C 145 95, 155 115, 160 130
+           C 165 145, 170 140, 170 140 Z" 
+        fill="url(#lightTealGradient)" 
+        filter="url(#innerShadow)"/>
+  
+  <!-- First bird head with enhanced details -->
+  <g transform="translate(145, 45) rotate(15)">
+    <ellipse cx="0" cy="0" rx="18" ry="14" fill="url(#darkTealGradient)" filter="url(#dropShadow)"/>
+    <!-- Enhanced curved beak -->
+    <path d="M14 -2 C 24 -8, 30 -1, 28 8 C 24 12, 18 8, 14 -2 Z" fill="url(#darkTealGradient)"/>
+    <!-- Detailed eye -->
+    <ellipse cx="4" cy="-1" rx="5" ry="4" fill="white"/>
+    <ellipse cx="5" cy="-2" rx="3" ry="2.5" fill="black"/>
+    <ellipse cx="6" cy="-3" rx="1.5" ry="1" fill="white"/>
+  </g>
+  
+  <!-- Second bird head with enhanced details -->
+  <g transform="translate(55, 155) rotate(195)">
+    <ellipse cx="0" cy="0" rx="18" ry="14" fill="url(#lightTealGradient)" filter="url(#dropShadow)"/>
+    <!-- Enhanced curved beak -->
+    <path d="M14 -2 C 24 -8, 30 -1, 28 8 C 24 12, 18 8, 14 -2 Z" fill="url(#lightTealGradient)"/>
+    <!-- Detailed eye -->
+    <ellipse cx="4" cy="-1" rx="5" ry="4" fill="white"/>
+    <ellipse cx="5" cy="-2" rx="3" ry="2.5" fill="black"/>
+    <ellipse cx="6" cy="-3" rx="1.5" ry="1" fill="white"/>
+  </g>
+  
+  <!-- Curved text with better positioning -->
+  <text font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#1F2937">
+    <textPath href="#textcircle" startOffset="16%">
+      tap to send me home
+    </textPath>
+  </text>
+  
+  <!-- Bottom brand text -->
+  <text x="100" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="bold" fill="#1F2937" letter-spacing="1.5px">
+    -vinditscandit-
+  </text>
+</svg>

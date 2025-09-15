@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 // GET one tag (public view)
 export async function GET(req, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     const tag = await prisma.tag.findUnique({
       where: { slug },
@@ -28,7 +28,7 @@ export async function GET(req, { params }) {
 // UPDATE one tag (client claim/edit)
 export async function PUT(req, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const body = await req.json();
     const { name, phone1, phone2, address } = body;
 

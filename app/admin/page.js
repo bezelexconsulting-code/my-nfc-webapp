@@ -208,22 +208,10 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="mb-6 text-3xl font-bold">Admin Dashboard</h1>
-
-      <div className="mb-6 rounded-lg border p-4 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold">Admin Status</h2>
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            {isAuthenticated ? (
-              <div className="flex items-center gap-2">
-                <span className="text-green-600">✓</span>
-                <span>Logged in as: {localStorage.getItem("adminUsername")}</span>
-              </div>
-            ) : (
-              <span className="text-red-600">Not authenticated</span>
-            )}
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto p-4 max-w-7xl">
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Admin Dashboard</h1>
           <button
             onClick={() => {
               localStorage.removeItem("adminToken");
@@ -231,145 +219,162 @@ export default function AdminPage() {
               setIsAuthenticated(false);
               router.push("/admin/login");
             }}
-            className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+            className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 transition-colors duration-200 touch-manipulation text-sm font-medium"
           >
             Logout
           </button>
         </div>
-      </div>
 
-      {error && (
-        <div className="mb-4 rounded-md bg-red-50 p-3 text-red-500">{error}</div>
-      )}
-
-      {isAuthenticated && (
-        <>
-          <div className="mb-6 rounded-lg border p-4 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold">Add New Tag</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium">Client</label>
-                <select
-                  value={selectedClient}
-                  onChange={(e) => setSelectedClient(e.target.value)}
-                  className="w-full rounded-md border p-2"
-                >
-                  <option value="">Select a client</option>
-                  {clients.map((client) => (
-                    <option key={client.id} value={client.name}>
-                      {client.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium">Tag Slug</label>
-                <input
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  placeholder="e.g., my-first-tag-123"
-                  className="w-full rounded-md border p-2"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  A unique identifier for the tag. Use letters, numbers, and hyphens.
-                </p>
-              </div>
-
-              <button
-                onClick={addTag}
-                disabled={loading || !selectedClient || !newTag.trim()}
-                className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:bg-green-300"
-              >
-                {loading ? "Adding..." : "Add Tag"}
-              </button>
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+          <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-800">Admin Status</h2>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>
+              {isAuthenticated ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600 text-lg">✓</span>
+                  <span className="text-sm sm:text-base text-gray-700">Logged in as: {localStorage.getItem("adminUsername")}</span>
+                </div>
+              ) : (
+                <span className="text-red-600">Not authenticated</span>
+              )}
             </div>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="rounded-lg border p-4 shadow-sm">
-              <h2 className="mb-4 text-xl font-semibold">Manage Clients</h2>
-              <div className="mb-6 space-y-4 rounded-md border p-4">
-                <h3 className="font-semibold">Add New Client</h3>
-                <input
-                  value={newClientName}
-                  onChange={(e) => setNewClientName(e.target.value)}
-                  placeholder="Client Name"
-                  className="w-full rounded-md border p-2"
-                />
-                <input
-                  type="email"
-                  value={newClientEmail}
-                  onChange={(e) => setNewClientEmail(e.target.value)}
-                  placeholder="Client Email"
-                  className="w-full rounded-md border p-2"
-                />
-                <input
-                  type="password"
-                  value={newClientPassword}
-                  onChange={(e) => setNewClientPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full rounded-md border p-2"
-                />
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 text-red-600 text-sm">{error}</div>
+        )}
+
+        {isAuthenticated && (
+          <>
+            <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+              <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-800">Add New Tag</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Client</label>
+                  <select
+                    value={selectedClient}
+                    onChange={(e) => setSelectedClient(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                  >
+                    <option value="">Select a client</option>
+                    {clients.map((client) => (
+                      <option key={client.id} value={client.name}>
+                        {client.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Tag Slug</label>
+                  <input
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    placeholder="e.g., my-first-tag-123"
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    A unique identifier for the tag. Use letters, numbers, and hyphens.
+                  </p>
+                </div>
+
                 <button
-                  onClick={addClient}
-                  disabled={loading || !newClientName.trim() || !newClientEmail.trim() || !newClientPassword.trim()}
-                  className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-blue-300"
+                  onClick={addTag}
+                  disabled={loading || !selectedClient || !newTag.trim()}
+                  className="w-full sm:w-auto rounded-lg bg-green-600 px-6 py-3 text-sm font-medium text-white hover:bg-green-700 focus:ring-2 focus:ring-green-200 disabled:bg-green-300 transition-colors duration-200 touch-manipulation"
                 >
-                  {loading ? "Adding..." : "Add Client"}
+                  {loading ? "Adding..." : "Add Tag"}
                 </button>
               </div>
+            </div>
 
-              <div>
-                <h3 className="mb-2 font-semibold">All Clients</h3>
-                {clients.length === 0 ? (
-                  <p className="text-gray-500">No clients found.</p>
-                ) : (
-                  <ul className="space-y-2">
-                    {clients.map((client) => (
-                      <li key={client.id} className="flex items-center justify-between gap-2 rounded-md border p-2">
-                        {editingClient?.id === client.id ? (
-                          <>
-                            <div className="flex-grow space-y-2">
-                              <input
-                                value={editingClient.name}
-                                onChange={(e) => setEditingClient({ ...editingClient, name: e.target.value })}
-                                className="w-full rounded-md border p-2 text-sm"
-                              />
-                              <input
-                                type="email"
-                                value={editingClient.email}
-                                onChange={(e) => setEditingClient({ ...editingClient, email: e.target.value })}
-                                className="w-full rounded-md border p-2 text-sm"
-                              />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <button onClick={updateClient} className="rounded-md bg-green-500 px-3 py-1 text-xs text-white">Save</button>
-                              <button onClick={() => setEditingClient(null)} className="rounded-md bg-gray-500 px-3 py-1 text-xs text-white">Cancel</button>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex-grow">
-                              <p className="font-bold">{client.name}</p>
-                              <p className="text-sm text-gray-600">{client.email}</p>
-                              <p className="text-xs text-gray-500">Tags: {client._count?.tags ?? 0}</p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <button
-                                onClick={() => setEditingClient({ id: client.id, name: client.name, email: client.email })}
-                                className="rounded-md bg-yellow-500 px-3 py-1 text-xs text-white"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => deleteClient(client.id)}
-                                className="rounded-md bg-red-600 px-3 py-1 text-xs text-white"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-800">Manage Clients</h2>
+                <div className="mb-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                  <h3 className="font-semibold text-gray-800">Add New Client</h3>
+                  <input
+                    value={newClientName}
+                    onChange={(e) => setNewClientName(e.target.value)}
+                    placeholder="Client Name"
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                  />
+                  <input
+                    type="email"
+                    value={newClientEmail}
+                    onChange={(e) => setNewClientEmail(e.target.value)}
+                    placeholder="Client Email"
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                  />
+                  <input
+                    type="password"
+                    value={newClientPassword}
+                    onChange={(e) => setNewClientPassword(e.target.value)}
+                    placeholder="Password"
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                  />
+                  <button
+                    onClick={addClient}
+                    disabled={loading || !newClientName.trim() || !newClientEmail.trim() || !newClientPassword.trim()}
+                    className="w-full sm:w-auto rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-200 disabled:bg-blue-300 transition-colors duration-200 touch-manipulation"
+                  >
+                    {loading ? "Adding..." : "Add Client"}
+                  </button>
+                </div>
+
+                <div>
+                  <h3 className="mb-3 font-semibold text-gray-800">All Clients</h3>
+                  {clients.length === 0 ? (
+                    <p className="text-gray-500 text-sm">No clients found.</p>
+                  ) : (
+                    <ul className="space-y-3">
+                      {clients.map((client) => (
+                        <li key={client.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
+                          {editingClient?.id === client.id ? (
+                            <>
+                              <div className="flex-grow space-y-3 w-full sm:w-auto">
+                                <input
+                                  value={editingClient.name}
+                                  onChange={(e) => setEditingClient({ ...editingClient, name: e.target.value })}
+                                  className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                                  placeholder="Client Name"
+                                />
+                                <input
+                                  type="email"
+                                  value={editingClient.email}
+                                  onChange={(e) => setEditingClient({ ...editingClient, email: e.target.value })}
+                                  className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                                  placeholder="Client Email"
+                                />
+                              </div>
+                              <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
+                                <button onClick={updateClient} className="flex-1 sm:flex-none rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 transition-colors duration-200 touch-manipulation">Save</button>
+                                <button onClick={() => setEditingClient(null)} className="flex-1 sm:flex-none rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white hover:bg-gray-600 transition-colors duration-200 touch-manipulation">Cancel</button>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="flex-grow">
+                                <p className="font-semibold text-gray-800">{client.name}</p>
+                                <p className="text-sm text-gray-600">{client.email}</p>
+                                <p className="text-xs text-gray-500 mt-1">Tags: {client._count?.tags ?? 0}</p>
+                              </div>
+                              <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
+                                <button
+                                  onClick={() => setEditingClient({ id: client.id, name: client.name, email: client.email })}
+                                  className="flex-1 sm:flex-none rounded-lg bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 transition-colors duration-200 touch-manipulation"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => deleteClient(client.id)}
+                                  className="flex-1 sm:flex-none rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors duration-200 touch-manipulation"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </>
                         )}
                       </li>
                     ))}
@@ -378,52 +383,89 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="rounded-lg border p-4 shadow-sm">
-              <h2 className="mb-4 text-xl font-semibold">All Tags</h2>
-              {tags.length === 0 ? (
-                <p className="text-gray-500">No tags found.</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full table-auto">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="p-2 text-left">Slug</th>
-                        <th className="p-2 text-left">Name</th>
-                        <th className="p-2 text-left">Client</th>
-                        <th className="p-2 text-left">Status</th>
-                        <th className="p-2 text-left">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+              <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-800">All Tags</h2>
+                {tags.length === 0 ? (
+                  <p className="text-gray-500 text-sm">No tags found.</p>
+                ) : (
+                  <>
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
+                      <table className="w-full table-auto">
+                        <thead>
+                          <tr className="border-b border-gray-200">
+                            <th className="p-3 text-left text-sm font-semibold text-gray-700">Slug</th>
+                            <th className="p-3 text-left text-sm font-semibold text-gray-700">Name</th>
+                            <th className="p-3 text-left text-sm font-semibold text-gray-700">Client</th>
+                            <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                            <th className="p-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tags.map((tag) => (
+                            <tr key={tag.slug} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+                              <td className="p-3"><strong className="text-gray-800">{tag.slug}</strong></td>
+                              <td className="p-3 text-gray-700">{tag.name || "(no name)"}</td>
+                              <td className="p-3 text-gray-700">{tag.client?.name || "Unknown"}</td>
+                              <td className="p-3">
+                                <span
+                                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+                                    tag.name ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                                  }`}
+                                >
+                                  {tag.name ? "Configured" : "Unconfigured"}
+                                </span>
+                              </td>
+                              <td className="p-3">
+                                <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
+                                  View
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-3">
                       {tags.map((tag) => (
-                        <tr key={tag.slug} className="border-b hover:bg-gray-50">
-                          <td className="p-2"><strong>{tag.slug}</strong></td>
-                          <td className="p-2">{tag.name || "(no name)"}</td>
-                          <td className="p-2">{tag.client?.name || "Unknown"}</td>
-                          <td className="p-2">
-                            <span
-                              className={`rounded-full px-2 py-1 text-xs ${
-                                tag.name ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-                              }`}
-                            >
-                              {tag.name ? "Configured" : "Unconfigured"}
-                            </span>
-                          </td>
-                          <td className="p-2">
-                            <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:underline">
-                              View
-                            </a>
-                          </td>
-                        </tr>
+                        <div key={tag.slug} className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                          <div className="flex flex-col space-y-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-grow">
+                                <p className="font-semibold text-gray-800">{tag.slug}</p>
+                                <p className="text-sm text-gray-600">{tag.name || "(no name)"}</p>
+                                <p className="text-sm text-gray-600">Client: {tag.client?.name || "Unknown"}</p>
+                              </div>
+                              <span
+                                className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${
+                                  tag.name ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                                }`}
+                              >
+                                {tag.name ? "Configured" : "Unconfigured"}
+                              </span>
+                            </div>
+                            <div className="pt-2">
+                              <a 
+                                href={`/public-tag/${tag.slug}`} 
+                                target="_blank" 
+                                className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200 touch-manipulation"
+                              >
+                                View Tag
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

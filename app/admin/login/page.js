@@ -45,19 +45,19 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Admin Login</h1>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">
             {error}
           </div>
         )}
         
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="username" className="block text-gray-700 font-medium mb-2 text-sm">
               Username
             </label>
             <input
@@ -65,13 +65,14 @@ export default function AdminLogin() {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500 text-base touch-manipulation"
+              placeholder="Enter admin username"
               required
             />
           </div>
           
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="password" className="block text-gray-700 font-medium mb-2 text-sm">
               Password
             </label>
             <input
@@ -79,7 +80,8 @@ export default function AdminLogin() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500 text-base touch-manipulation"
+              placeholder="Enter admin password"
               required
             />
           </div>
@@ -87,15 +89,15 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-blue-300"
+            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-blue-300 font-medium text-base transition-colors duration-200 touch-manipulation"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         
-        <div className="mt-4 text-center">
-          <Link href="/" className="text-blue-500 hover:text-blue-700">
-            Back to Home
+        <div className="mt-6 text-center">
+          <Link href="/" className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium touch-manipulation">
+            ← Back to Home
           </Link>
         </div>
       </div>

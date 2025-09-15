@@ -77,6 +77,20 @@ export default function PublicTagPage({ params }) {
             <h2 className="mb-2 text-lg font-medium text-green-800">Location</h2>
             <p className="text-gray-700">{tag.address || "Address not available"}</p>
           </div>
+          
+          {tag.url && (
+            <div className="rounded-md bg-purple-50 p-4">
+              <h2 className="mb-2 text-lg font-medium text-purple-800">Website</h2>
+              <a 
+                href={tag.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                {tag.url}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ model Tag {
   phone1     String
   phone2     String
   address    String
+  url        String   @default("")
   clientId   Int
   client     Client   @relation(fields: [clientId], references: [id])
   createdAt  DateTime @default(now())

@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export async function PUT(req, { params }) {
   try {
     const { id } = params;
-    const { name, phone1, phone2, address } = await req.json();
+    const { name, phone1, phone2, address, url } = await req.json();
     
     // Validate tag ID
     const tagId = parseInt(id, 10);
@@ -31,6 +31,7 @@ export async function PUT(req, { params }) {
         phone1: phone1 ?? tag.phone1,
         phone2: phone2 ?? tag.phone2,
         address: address ?? tag.address,
+        url: url ?? tag.url,
       },
     });
 

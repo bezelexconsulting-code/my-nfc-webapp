@@ -138,11 +138,11 @@ export default function Dashboard() {
       
       <h2 className="mb-4 text-xl font-semibold">Your Tags</h2>
       
-      {client.tags.length === 0 ? (
+      {!client.tags || client.tags?.length === 0 ? (
         <p className="text-gray-500">You don't have any tags yet.</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {client.tags.map((tag) => (
+          {client.tags?.map((tag) => (
             <div key={tag.id} className="rounded-lg border p-4 shadow-sm">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-lg font-medium">{tag.slug}</h3>
@@ -197,6 +197,19 @@ export default function Dashboard() {
                     onBlur={(e) => updateTag(tag.id, { ...tag, address: e.target.value })}
                     className="w-full rounded-md border p-2 text-sm"
                     rows="2"
+                  />
+                </div>
+                
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    URL (Tappable Link)
+                  </label>
+                  <input
+                    type="url"
+                    defaultValue={tag.url}
+                    placeholder="https://example.com"
+                    onBlur={(e) => updateTag(tag.id, { ...tag, url: e.target.value })}
+                    className="w-full rounded-md border p-2 text-sm"
                   />
                 </div>
                 

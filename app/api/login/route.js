@@ -25,7 +25,7 @@ export async function POST(req) {
     JSON.stringify({
       success: true,
       client: { id: client.id, name: client.name },
-      tags: client.tags,
+      tags: client.tags || [],
     }),
     { headers: { "Content-Type": "application/json" } }
   );

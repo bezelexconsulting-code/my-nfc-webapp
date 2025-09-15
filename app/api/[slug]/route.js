@@ -28,7 +28,7 @@ export async function PUT(req, { params }) {
   try {
     const { slug } = params;
     const body = await req.json();
-    const { name, phone1, phone2, address, password, owner } = body;
+    const { name, phone1, phone2, address, url, password, owner } = body;
 
     const data = await fs.readFile(dataFile, "utf-8");
     const tags = JSON.parse(data || "[]");
@@ -52,6 +52,7 @@ export async function PUT(req, { params }) {
         phone1: phone1 ?? existingTag.phone1,
         phone2: phone2 ?? existingTag.phone2,
         address: address ?? existingTag.address,
+        url: url ?? existingTag.url,
         claimed: true,
         password: password,
         owner: owner || null,

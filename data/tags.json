@@ -1,11 +1,1 @@
-[
-	{
-		"slug": "demo-tag",
-		"name": "Demo Business",
-		"phone1": "+1 555-0100",
-		"phone2": "",
-		"address": "123 Demo Street, Testville",
-		"claimed": false,
-		"password": null
-	}
-]
+[]

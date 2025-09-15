@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
@@ -13,11 +13,13 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
-  async function loadTags() {
+  const loadTags = useCallback(async (adminToken) => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/tags", { headers: { "x-admin-token": token } });
+      const res = await fetch("/api/tags", {
+        headers: { "x-admin-token": adminToken },
+      });
       if (!res.ok) {
         const txt = await res.text();
         setError(txt || "Failed to load tags");
@@ -31,13 +33,15 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  }
-  
-  async function loadClients() {
+  }, []);
+
+  const loadClients = useCallback(async (adminToken) => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/clients", { headers: { "x-admin-token": token } });
+      const res = await fetch("/api/clients", {
+        headers: { "x-admin-token": adminToken },
+      });
       if (!res.ok) {
         const txt = await res.text();
         setError(txt || "Failed to load clients");
@@ -51,21 +55,21 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     // Check if admin is logged in
-    const storedToken = localStorage.getItem('adminToken');
+    const storedToken = localStorage.getItem("adminToken");
     if (storedToken) {
       setToken(storedToken);
       setIsAuthenticated(true);
-      loadTags();
-      loadClients();
+      loadTags(storedToken);
+      loadClients(storedToken);
     } else {
       // Redirect to login if not authenticated
-      router.push('/admin/login');
+      router.push("/admin/login");
     }
-  }, [router]);
+  }, [router, loadTags, loadClients]);
 
   async function addTag() {
     if (!newTag.trim() || !selectedClient) {
@@ -78,9 +82,9 @@ export default function AdminPage() {
       const res = await fetch("/api/tags", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-admin-token": token },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           slug: newTag,
-          clientName: selectedClient 
+          clientName: selectedClient,
         }),
       });
       if (!res.ok) {
@@ -110,19 +114,21 @@ export default function AdminPage() {
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
                 <span className="text-green-600">✓</span>
-                <span>Logged in as: {localStorage.getItem('adminUsername')}</span>
+                <span>
+                  Logged in as: {localStorage.getItem("adminUsername")}
+                </span>
               </div>
             ) : (
               <span className="text-red-600">Not authenticated</span>
             )}
           </div>
-          <button 
+          <button
             onClick={() => {
-              localStorage.removeItem('adminToken');
-              localStorage.removeItem('adminUsername');
+              localStorage.removeItem("adminToken");
+              localStorage.removeItem("adminUsername");
               setIsAuthenticated(false);
-              router.push('/admin/login');
-            }} 
+              router.push("/admin/login");
+            }}
             className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
           >
             Logout
@@ -155,9 +161,11 @@ export default function AdminPage() {
                 ))}
               </select>
             </div>
-            
+
             <div>
-              <label className="mb-1 block text-sm font-medium">Tag Slug</label>
+              <label className="mb-1 block text-sm font-medium">
+                Tag Slug
+              </label>
               <input
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
@@ -165,9 +173,9 @@ export default function AdminPage() {
                 className="w-full rounded-md border p-2"
               />
             </div>
-            
-            <button 
-              onClick={addTag} 
+
+            <button
+              onClick={addTag}
               disabled={loading || !selectedClient || !newTag.trim()}
               className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:bg-green-300"
             >
@@ -203,13 +211,19 @@ export default function AdminPage() {
                       <td className="p-2">{tag.name || "(no name)"}</td>
                       <td className="p-2">{tag.client?.name || "Unknown"}</td>
                       <td className="p-2">
-                        <span className={`rounded-full px-2 py-1 text-xs ${tag.name ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
+                        <span
+                          className={`rounded-full px-2 py-1 text-xs ${
+                            tag.name
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
                           {tag.name ? "Configured" : "Unconfigured"}
                         </span>
                       </td>
                       <td className="p-2">
-                        <a 
-                          href={`/public-tag/${tag.slug}`} 
+                        <a
+                          href={`/public-tag/${tag.slug}`}
                           target="_blank"
                           className="text-sm text-blue-600 hover:underline"
                         >

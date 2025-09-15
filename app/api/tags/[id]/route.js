@@ -1,74 +1,117 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// Update a tag (client only)
+// Middleware to check for admin token
+async function checkAdmin(req) {
+  const adminToken = req.headers.get("x-admin-token");
+  if (!adminToken) {
+    return { error: "Admin token required", status: 401 };
+  }
+  const admin = await prisma.admin.findUnique({
+    where: { token: adminToken },
+  });
+  if (!admin) {
+    return { error: "Invalid admin token", status: 403 };
+  }
+  return { admin };
+}
+
+// UPDATE a client
 export async function PUT(req, { params }) {
   try {
+    const { error, status } = await checkAdmin(req);
+    if (error) {
+      return new Response(JSON.stringify({ error }), { status });
+    }
+
     const { id } = params;
-    const { name, phone1, phone2, address, url } = await req.json();
-    
-    // Validate tag ID
-    const tagId = parseInt(id, 10);
-    if (isNaN(tagId)) {
-      return new Response(JSON.stringify({ error: "Invalid tag ID" }), { status: 400 });
+    const { name, email } = await req.json();
+
+    if (!name && !email) {
+      return new Response(
+        JSON.stringify({ error: "Name or email is required for update" }),
+        { status: 400 }
+      );
     }
 
-    // Find the tag
-    const tag = await prisma.tag.findUnique({
-      where: { id: tagId },
-      include: { client: true },
-    });
-
-    if (!tag) {
-      return new Response(JSON.stringify({ error: "Tag not found" }), { status: 404 });
+    // If email is being changed, check if the new one is already taken
+    if (email) {
+      const existingClient = await prisma.client.findFirst({
+        where: {
+          email,
+          id: { not: parseInt(id) },
+        },
+      });
+      if (existingClient) {
+        return new Response(
+          JSON.stringify({ error: "Email already in use by another client" }),
+          { status: 409 }
+        );
+      }
     }
 
-    // Update the tag
-    const updatedTag = await prisma.tag.update({
-      where: { id: tagId },
+    const updatedClient = await prisma.client.update({
+      where: { id: parseInt(id) },
       data: {
-        name: name ?? tag.name,
-        phone1: phone1 ?? tag.phone1,
-        phone2: phone2 ?? tag.phone2,
-        address: address ?? tag.address,
-        url: url ?? tag.url,
+        name: name,
+        email: email,
       },
     });
 
-    return new Response(JSON.stringify(updatedTag), {
-      headers: { "Content-Type": "application/json" },
-    });
+    const { password, ...clientData } = updatedClient;
+    return new Response(JSON.stringify(clientData), { status: 200 });
   } catch (error) {
-    console.error("PUT /api/tags/[id] error:", error);
-    return new Response(JSON.stringify({ error: "Failed to update tag" }), { status: 500 });
+    console.error(`PUT /api/clients/${params.id} error:`, error);
+    if (error.code === "P2025") {
+      // Prisma error code for record not found
+      return new Response(JSON.stringify({ error: "Client not found" }), {
+        status: 404,
+      });
+    }
+    return new Response(
+      JSON.stringify({ error: "Failed to update client" }),
+      { status: 500 }
+    );
   }
 }
 
-// Get a specific tag (client only)
-export async function GET(req, { params }) {
+// DELETE a client
+export async function DELETE(req, { params }) {
   try {
+    const { error, status } = await checkAdmin(req);
+    if (error) {
+      return new Response(JSON.stringify({ error }), { status });
+    }
+
     const { id } = params;
-    
-    // Validate tag ID
-    const tagId = parseInt(id, 10);
-    if (isNaN(tagId)) {
-      return new Response(JSON.stringify({ error: "Invalid tag ID" }), { status: 400 });
-    }
 
-    // Find the tag
-    const tag = await prisma.tag.findUnique({
-      where: { id: tagId },
+    // Prisma will handle cascading deletes if configured in the schema.
+    await prisma.client.delete({
+      where: { id: parseInt(id) },
     });
 
-    if (!tag) {
-      return new Response(JSON.stringify({ error: "Tag not found" }), { status: 404 });
-    }
-
-    return new Response(JSON.stringify(tag), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(null, { status: 204 }); // No Content
   } catch (error) {
-    console.error("GET /api/tags/[id] error:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch tag" }), { status: 500 });
+    console.error(`DELETE /api/clients/${params.id} error:`, error);
+    if (error.code === "P2025") {
+      // Prisma error code for record not found
+      return new Response(JSON.stringify({ error: "Client not found" }), {
+        status: 404,
+      });
+    }
+    // Foreign key constraint failed
+    if (error.code === "P2003") {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Cannot delete client. They still have tags assigned to them. Please reassign or delete the tags first.",
+        }),
+        { status: 409 }
+      );
+    }
+    return new Response(
+      JSON.stringify({ error: "Failed to delete client" }),
+      { status: 500 }
+    );
   }
 }

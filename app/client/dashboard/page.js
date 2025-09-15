@@ -137,7 +137,7 @@ export default function Dashboard() {
           </button>
           
           <div className="mt-4 text-center text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a href="/register" className="text-blue-600 hover:underline">
               Register
             </a>
@@ -174,7 +174,7 @@ export default function Dashboard() {
       <h2 className="mb-4 text-xl font-semibold">Your Tags</h2>
       
       {!client.tags || client.tags?.length === 0 ? (
-        <p className="text-gray-500">You don't have any tags yet.</p>
+        <p className="text-gray-500">You don&apos;t have any tags yet.</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {client.tags?.map((tag) => (

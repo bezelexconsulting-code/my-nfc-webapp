@@ -9,6 +9,18 @@ export default function Dashboard() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [tagForms, setTagForms] = useState({});
+  const [saveSuccess, setSaveSuccess] = useState("");
+
+  useEffect(() => {
+    if (client && client.tags) {
+      const forms = {};
+      client.tags.forEach(tag => {
+        forms[tag.id] = { ...tag };
+      });
+      setTagForms(forms);
+    }
+  }, [client]);
 
   async function login() {
     setLoading(true);
@@ -34,6 +46,8 @@ export default function Dashboard() {
 
   async function updateTag(tagId, newData) {
     setLoading(true);
+    setError("");
+    setSaveSuccess("");
     try {
       const res = await fetch(`/api/tags/${tagId}`, {
         method: "PUT",
@@ -42,12 +56,12 @@ export default function Dashboard() {
       });
       
       if (res.ok) {
-        // Update the client state with the updated tag
         const updatedTag = await res.json();
         setClient(prev => ({
           ...prev,
           tags: prev.tags.map(tag => tag.id === tagId ? updatedTag : tag)
         }));
+        setSaveSuccess("Changes saved successfully!");
       } else {
         const errorData = await res.json();
         setError(errorData.error || "Update failed");
@@ -57,6 +71,16 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleInputChange(tagId, field, value) {
+    setTagForms(prev => ({
+        ...prev,
+        [tagId]: {
+            ...prev[tagId],
+            [field]: value
+        }
+    }));
   }
 
   if (!client) {
@@ -135,6 +159,12 @@ export default function Dashboard() {
           {error}
         </div>
       )}
+
+      {saveSuccess && (
+        <div className="mb-4 rounded-md bg-green-50 p-3 text-green-500">
+          {saveSuccess}
+        </div>
+      )}
       
       <h2 className="mb-4 text-xl font-semibold">Your Tags</h2>
       
@@ -151,15 +181,15 @@ export default function Dashboard() {
                 </span>
               </div>
               
-              <form className="space-y-3">
+              <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); updateTag(tag.id, tagForms[tag.id]); }}>
                 <div>
                   <label className="mb-1 block text-sm font-medium">
                     Name
                   </label>
                   <input
                     type="text"
-                    defaultValue={tag.name}
-                    onBlur={(e) => updateTag(tag.id, { ...tag, name: e.target.value })}
+                    value={tagForms[tag.id]?.name || ""}
+                    onChange={(e) => handleInputChange(tag.id, 'name', e.target.value)}
                     className="w-full rounded-md border p-2 text-sm"
                   />
                 </div>
@@ -170,8 +200,8 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="tel"
-                    defaultValue={tag.phone1}
-                    onBlur={(e) => updateTag(tag.id, { ...tag, phone1: e.target.value })}
+                    value={tagForms[tag.id]?.phone1 || ""}
+                    onChange={(e) => handleInputChange(tag.id, 'phone1', e.target.value)}
                     className="w-full rounded-md border p-2 text-sm"
                   />
                 </div>
@@ -182,8 +212,8 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="tel"
-                    defaultValue={tag.phone2}
-                    onBlur={(e) => updateTag(tag.id, { ...tag, phone2: e.target.value })}
+                    value={tagForms[tag.id]?.phone2 || ""}
+                    onChange={(e) => handleInputChange(tag.id, 'phone2', e.target.value)}
                     className="w-full rounded-md border p-2 text-sm"
                   />
                 </div>
@@ -193,8 +223,8 @@ export default function Dashboard() {
                     Address
                   </label>
                   <textarea
-                    defaultValue={tag.address}
-                    onBlur={(e) => updateTag(tag.id, { ...tag, address: e.target.value })}
+                    value={tagForms[tag.id]?.address || ""}
+                    onChange={(e) => handleInputChange(tag.id, 'address', e.target.value)}
                     className="w-full rounded-md border p-2 text-sm"
                     rows="2"
                   />
@@ -206,21 +236,29 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="url"
-                    defaultValue={tag.url}
+                    value={tagForms[tag.id]?.url || ""}
                     placeholder="https://example.com"
-                    onBlur={(e) => updateTag(tag.id, { ...tag, url: e.target.value })}
+                    onChange={(e) => handleInputChange(tag.id, 'url', e.target.value)}
                     className="w-full rounded-md border p-2 text-sm"
                   />
                 </div>
-                
-                <div className="pt-2">
+
+                <div className="flex items-center justify-between pt-2">
                   <a 
                     href={`/public-tag/${tag.slug}`} 
                     target="_blank" 
+                    rel="noopener noreferrer"
                     className="text-sm text-blue-600 hover:underline"
                   >
                     View Public Page
                   </a>
+                  <button 
+                    type="submit"
+                    disabled={loading}
+                    className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:bg-blue-300"
+                  >
+                    {loading ? "Saving..." : "Save"}
+                  </button>
                 </div>
               </form>
             </div>

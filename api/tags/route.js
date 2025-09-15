@@ -1,82 +1,42 @@
 import { promises as fs } from "fs";
 import path from "path";
 
-const filePath = path.join(process.cwd(), "data", "tags.json");
+const dataFile = path.join(process.cwd(), "data", "tags.json");
 
-function isValidAdmin(request) {
-  const token = request.headers.get("x-admin-token") || "";
-  const expected = process.env.ADMIN_TOKEN || "admin-secret";
-  return token === expected;
-}
-
-// GET all tags (admin use)
-export async function GET(request) {
+// GET all tags
+export async function GET() {
   try {
-    // Allow public listing by owner via query param: /api/tags?owner=email
-    let owner = null;
-    try {
-      const url = request.url && (request.url.startsWith("http:") || request.url.startsWith("https:"))
-        ? new URL(request.url)
-        : new URL(request.url || "", `http://${request.headers.get("host") || "localhost"}`);
-      owner = url.searchParams.get("owner");
-    } catch (err) {
-      console.error("Failed to parse request URL for owner param:", err, request.url);
-      owner = null;
-    }
-    const data = await fs.readFile(filePath, "utf-8");
-    const tags = JSON.parse(data || "[]");
-
-    if (owner) {
-      // Return public view of tags assigned to this owner (no password)
-      const ownerTags = tags.filter((t) => t.owner === owner).map(({ password, ...rest }) => rest);
-      return Response.json(ownerTags);
-    }
-
-    // Otherwise require admin token
-    if (!isValidAdmin(request)) {
-      return new Response("Admin token required", { status: 401 });
-    }
-
-    return Response.json(tags);
+    const data = await fs.readFile(dataFile, "utf-8");
+    return new Response(data, { status: 200 });
   } catch (error) {
-    console.error("Error reading tags.json:", error);
-    return new Response("Failed to load tags", { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to load tags" }), { status: 500 });
   }
 }
 
-// POST new tag (admin creates a new tag)
-export async function POST(request) {
+// CREATE new tag
+export async function POST(req) {
   try {
-    if (!isValidAdmin(request)) {
-      return new Response("Admin token required", { status: 401 });
+    const body = await req.json();
+    const { slug, name } = body;
+
+    if (!slug || !name) {
+      return new Response(JSON.stringify({ error: "Slug and name required" }), { status: 400 });
     }
 
-    const body = await request.json();
-    const data = await fs.readFile(filePath, "utf-8");
-    const tags = JSON.parse(data || "[]");
+    const data = await fs.readFile(dataFile, "utf-8");
+    const tags = JSON.parse(data);
 
-    const newTag = {
-      slug: body.slug,
-      name: body.name || "",
-      phone1: body.phone1 || "",
-      phone2: body.phone2 || "",
-      address: body.address || "",
-      claimed: false,
-      password: null,
-      owner: body.owner || null
-    };
-
-    if (tags.find((tag) => tag.slug === newTag.slug)) {
-      return new Response("Tag already exists", { status: 400 });
+    if (tags.find(t => t.slug === slug)) {
+      return new Response(JSON.stringify({ error: "Slug already exists" }), { status: 400 });
     }
 
+    const newTag = { slug, name, phone: "", address: "", password: "" };
     tags.push(newTag);
 
-    await fs.writeFile(filePath, JSON.stringify(tags, null, 2));
+    await fs.writeFile(dataFile, JSON.stringify(tags, null, 2));
 
-    return Response.json(newTag, { status: 201 });
+    return new Response(JSON.stringify(newTag), { status: 201 });
   } catch (error) {
-    console.error("Error creating new tag:", error);
-    return new Response("Failed to create tag", { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to create tag" }), { status: 500 });
   }
 }

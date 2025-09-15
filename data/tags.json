@@ -1,1 +1,10 @@
-[]
+[{
+	"slug": "demo-tag",
+	"name": "Demo Tag",
+	"phone1": "+1-555-0001",
+	"phone2": "+1-555-0002",
+	"address": "123 Demo Street",
+	"claimed": false,
+	"password": "secret123",
+	"owner": null
+}]

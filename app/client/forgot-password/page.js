@@ -71,7 +71,7 @@ export default function ForgotPassword() {
               required
             />
             <p className="mt-2 text-xs text-gray-500">
-              Enter the email address associated with your account and we'll send you a link to reset your password.
+              Enter the email address associated with your account and we&apos;ll send you a link to reset your password.
             </p>
           </div>
           

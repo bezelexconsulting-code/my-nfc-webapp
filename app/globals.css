@@ -57,6 +57,15 @@ body {
   select {
     font-size: 16px; /* Prevent zoom on iOS */
     line-height: 1.5;
+    color: #1f2937 !important; /* Dark text for better visibility */
+    background-color: #ffffff !important; /* Ensure white background */
+  }
+  
+  /* Ensure placeholder text is visible but not too dark */
+  input::placeholder,
+  textarea::placeholder {
+    color: #6b7280 !important; /* Medium gray for placeholders */
+    opacity: 1;
   }
   
   /* Better readability */
@@ -84,6 +93,55 @@ body {
 *:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
+}
+
+/* Ensure all input elements have proper text visibility */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="number"],
+textarea,
+select {
+  color: #1f2937 !important; /* Dark gray text */
+  background-color: #ffffff !important; /* White background */
+  -webkit-text-fill-color: #1f2937 !important; /* Override webkit autofill */
+}
+
+/* Handle autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  input[type="number"],
+  textarea,
+  select {
+    color: #1f2937 !important; /* Keep dark text even in dark mode for better contrast */
+    background-color: #ffffff !important; /* Keep white background */
+    border-color: #d1d5db !important; /* Light gray border */
+  }
+  
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+  }
 }
 
 /* Better scrolling on mobile */

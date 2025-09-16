@@ -18,6 +18,12 @@ export default function AdminPage() {
   const [newClientEmail, setNewClientEmail] = useState("");
   const [newClientPassword, setNewClientPassword] = useState("");
   const [editingClient, setEditingClient] = useState(null); // { id, name, email }
+  
+  // Client Search State
+  const [clientSearchQuery, setClientSearchQuery] = useState("");
+  const [selectedClientForView, setSelectedClientForView] = useState(null);
+  const [filteredClients, setFilteredClients] = useState([]);
+  const [clientTags, setClientTags] = useState([]);
 
   const loadTags = useCallback(async (adminToken) => {
     setError("");
@@ -74,6 +80,56 @@ export default function AdminPage() {
       router.push("/admin/login");
     }
   }, [router, loadTags, loadClients]);
+
+  // Filter clients based on search query
+  useEffect(() => {
+    if (clientSearchQuery.trim() === "") {
+      setFilteredClients([]);
+    } else {
+      const filtered = clients.filter(client => 
+        client.name.toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+        client.email.toLowerCase().includes(clientSearchQuery.toLowerCase())
+      );
+      setFilteredClients(filtered);
+    }
+  }, [clientSearchQuery, clients]);
+
+  // Load tags for selected client
+  const loadClientTags = useCallback(async (clientId, adminToken) => {
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/tags?clientId=${clientId}`, {
+        headers: { "x-admin-token": adminToken },
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        setError(txt || "Failed to load client tags");
+        setClientTags([]);
+        return;
+      }
+      const data = await res.json();
+      setClientTags(data);
+    } catch (err) {
+      setError("Failed to load client tags");
+      setClientTags([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleClientSelect = (client) => {
+    setSelectedClientForView(client);
+    setClientSearchQuery(client.name);
+    setFilteredClients([]);
+    loadClientTags(client.id, token);
+  };
+
+  const clearClientSelection = () => {
+    setSelectedClientForView(null);
+    setClientSearchQuery("");
+    setClientTags([]);
+  };
 
   const getErrorFromResponse = async (res) => {
     const defaultError = "An unknown error occurred.";
@@ -381,6 +437,133 @@ export default function AdminPage() {
                   </ul>
                 )}
               </div>
+            </div>
+
+            <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+              <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-800">View Client Tags</h2>
+              
+              <div className="mb-6">
+                <label className="mb-2 block text-sm font-medium text-gray-700">Search Client</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={clientSearchQuery}
+                    onChange={(e) => setClientSearchQuery(e.target.value)}
+                    placeholder="Type client name or email..."
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                  />
+                  {selectedClientForView && (
+                    <button
+                      onClick={clearClientSelection}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                
+                {/* Search Results Dropdown */}
+                {filteredClients.length > 0 && !selectedClientForView && (
+                  <div className="mt-2 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+                    {filteredClients.map((client) => (
+                      <button
+                        key={client.id}
+                        onClick={() => handleClientSelect(client)}
+                        className="w-full text-left p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors duration-150"
+                      >
+                        <div className="font-medium text-gray-800">{client.name}</div>
+                        <div className="text-sm text-gray-600">{client.email}</div>
+                        <div className="text-xs text-gray-500">Tags: {client._count?.tags ?? 0}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Selected Client Tags Display */}
+              {selectedClientForView && (
+                <div className="mb-6">
+                  <div className="mb-4 rounded-lg bg-blue-50 border border-blue-200 p-4">
+                    <h3 className="font-semibold text-blue-800 mb-1">{selectedClientForView.name}</h3>
+                    <p className="text-sm text-blue-600">{selectedClientForView.email}</p>
+                    <p className="text-xs text-blue-500 mt-1">Total Tags: {clientTags.length}</p>
+                  </div>
+                  
+                  {clientTags.length === 0 ? (
+                    <p className="text-gray-500 text-sm">This client has no tags yet.</p>
+                  ) : (
+                    <>
+                      {/* Desktop Table View for Client Tags */}
+                      <div className="hidden md:block overflow-x-auto">
+                        <table className="w-full table-auto">
+                          <thead>
+                            <tr className="border-b border-gray-200">
+                              <th className="p-3 text-left text-sm font-semibold text-gray-700">Slug</th>
+                              <th className="p-3 text-left text-sm font-semibold text-gray-700">Name</th>
+                              <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                              <th className="p-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {clientTags.map((tag) => (
+                              <tr key={tag.slug} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+                                <td className="p-3"><strong className="text-gray-800">{tag.slug}</strong></td>
+                                <td className="p-3 text-gray-700">{tag.name || "(no name)"}</td>
+                                <td className="p-3">
+                                  <span
+                                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                                      tag.name ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                                    }`}
+                                  >
+                                    {tag.name ? "Configured" : "Unconfigured"}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
+                                    View
+                                  </a>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      {/* Mobile Card View for Client Tags */}
+                      <div className="md:hidden space-y-3">
+                        {clientTags.map((tag) => (
+                          <div key={tag.slug} className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                            <div className="flex flex-col space-y-2">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-grow">
+                                  <p className="font-semibold text-gray-800">{tag.slug}</p>
+                                  <p className="text-sm text-gray-600">{tag.name || "(no name)"}</p>
+                                </div>
+                                <span
+                                  className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${
+                                    tag.name ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                                  }`}
+                                >
+                                  {tag.name ? "Configured" : "Unconfigured"}
+                                </span>
+                              </div>
+                              <div className="pt-2">
+                                <a 
+                                  href={`/public-tag/${tag.slug}`} 
+                                  target="_blank" 
+                                  className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200 touch-manipulation"
+                                >
+                                  View Tag
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">

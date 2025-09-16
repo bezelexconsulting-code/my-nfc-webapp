@@ -23,8 +23,16 @@ export async function GET(req) {
       });
     }
 
-    // Get all tags with client info
+    // Check if filtering by clientId
+    const url = new URL(req.url);
+    const clientId = url.searchParams.get('clientId');
+    
+    // Build query based on whether clientId filter is provided
+    const whereClause = clientId ? { clientId: parseInt(clientId) } : {};
+    
+    // Get tags with client info (filtered or all)
     const tags = await prisma.tag.findMany({
+      where: whereClause,
       include: {
         client: {
           select: {

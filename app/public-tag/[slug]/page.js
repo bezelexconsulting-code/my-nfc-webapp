@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useState, useEffect } from "react";
 
 export default function PublicTagPage({ params }) {
@@ -43,7 +43,7 @@ export default function PublicTagPage({ params }) {
         }
       }
     };
-    
+
     fetchTag();
 
     return () => {
@@ -51,41 +51,41 @@ export default function PublicTagPage({ params }) {
     };
   }, [params]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
-  if (!tag) return <p>Tag not found</p>;
+  if (loading) return <p className="text-center text-xl font-semibold text-gray-900 p-8">Loading...</p>;
+  if (error) return <p className="text-center text-xl font-semibold text-red-700 p-8">Error: {error}</p>;
+  if (!tag) return <p className="text-center text-xl font-semibold text-gray-900 p-8">Tag not found</p>;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-        <h1 className="mb-6 text-center text-2xl font-bold">{tag.name || "NFC Tag"}</h1>
-        
-        <div className="space-y-4">
-          <div className="rounded-md bg-blue-50 p-4">
-            <h2 className="mb-2 text-lg font-medium text-blue-800">Contact Information</h2>
-            <p className="text-gray-700">
-              <strong>Primary:</strong> {tag.phone1 || "Not available"}
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg border border-gray-200">
+        <h1 className="mb-6 text-center text-3xl font-bold text-gray-900">{tag.name || "NFC Tag"}</h1>
+
+        <div className="space-y-6">
+          <div className="rounded-md bg-blue-100 p-5 border-2 border-blue-300">
+            <h2 className="mb-3 text-xl font-bold text-blue-900">Contact Information</h2>
+            <p className="text-gray-900 text-lg mb-2 leading-relaxed">
+              <strong className="text-blue-900">Primary:</strong> {tag.phone1 || "Not available"}
             </p>
             {tag.phone2 && (
-              <p className="text-gray-700">
-                <strong>Secondary:</strong> {tag.phone2}
+              <p className="text-gray-900 text-lg leading-relaxed">
+                <strong className="text-blue-900">Secondary:</strong> {tag.phone2}
               </p>
             )}
           </div>
-          
-          <div className="rounded-md bg-green-50 p-4">
-            <h2 className="mb-2 text-lg font-medium text-green-800">Location</h2>
-            <p className="text-gray-700">{tag.address || "Address not available"}</p>
+
+          <div className="rounded-md bg-green-100 p-5 border-2 border-green-300">
+            <h2 className="mb-3 text-xl font-bold text-green-900">Location</h2>
+            <p className="text-gray-900 text-lg leading-relaxed">{tag.address || "Address not available"}</p>
           </div>
-          
+
           {tag.url && (
-            <div className="rounded-md bg-purple-50 p-4">
-              <h2 className="mb-2 text-lg font-medium text-purple-800">Website</h2>
-              <a 
-                href={tag.url} 
-                target="_blank" 
+            <div className="rounded-md bg-purple-100 p-5 border-2 border-purple-300">
+              <h2 className="mb-3 text-xl font-bold text-purple-900">Website</h2>
+              <a
+                href={tag.url}
+                target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-blue-800 hover:text-blue-900 hover:underline text-lg font-semibold break-all"
               >
                 {tag.url}
               </a>

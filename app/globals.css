@@ -296,3 +296,63 @@ body {
     font-weight: 800 !important;
   }
 }
+
+/* Ensure consistent button colors across all devices */
+.bg-blue-600 {
+  background-color: #2563eb !important;
+}
+
+.hover\:bg-blue-700:hover {
+  background-color: #1d4ed8 !important;
+}
+
+.bg-gray-600 {
+  background-color: #4b5563 !important;
+}
+
+.hover\:bg-gray-700:hover {
+  background-color: #374151 !important;
+}
+
+.bg-green-600 {
+  background-color: #16a34a !important;
+}
+
+.hover\:bg-green-700:hover {
+  background-color: #15803d !important;
+}
+
+.bg-red-600 {
+  background-color: #dc2626 !important;
+}
+
+.hover\:bg-red-700:hover {
+  background-color: #b91c1c !important;
+}
+
+.bg-yellow-500 {
+  background-color: #eab308 !important;
+}
+
+.hover\:bg-yellow-600:hover {
+  background-color: #ca8a04 !important;
+}
+
+/* Ensure button text remains white on all devices */
+@media (max-width: 768px) {
+  .bg-blue-600,
+  .bg-gray-600,
+  .bg-green-600,
+  .bg-red-600,
+  .bg-yellow-500 {
+    color: #ffffff !important;
+  }
+  
+  .hover\:bg-blue-700:hover,
+  .hover\:bg-gray-700:hover,
+  .hover\:bg-green-700:hover,
+  .hover\:bg-red-700:hover,
+  .hover\:bg-yellow-600:hover {
+    color: #ffffff !important;
+  }
+}

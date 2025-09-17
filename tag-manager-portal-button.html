@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag Manager Portal Button - Integration Code</title>
+    <style>
+        /* Demo page styling - remove this section when integrating */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .demo-title {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .code-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        /* END Demo styling */
+
+        /* TAG MANAGER PORTAL BUTTON - START COPYING FROM HERE */
+        .tag-manager-portal {
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .tag-manager-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tag-manager-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+
+        .tag-manager-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .tag-manager-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .tag-manager-btn:hover::before {
+            left: 100%;
+        }
+
+        .tag-manager-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            fill: currentColor;
+        }
+
+        .tag-manager-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .tag-manager-btn {
+                padding: 14px 24px;
+                font-size: 14px;
+            }
+            
+            .tag-manager-icon {
+                width: 18px;
+                height: 18px;
+                margin-right: 8px;
+            }
+        }
+
+        /* Alternative button styles - choose one */
+        .tag-manager-btn.style-green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+        }
+
+        .tag-manager-btn.style-green:hover {
+            background: linear-gradient(135deg, #0e8078 0%, #32d96a 100%);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .tag-manager-btn.style-orange {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .tag-manager-btn.style-orange:hover {
+            background: linear-gradient(135deg, #ed7de8 0%, #f04458 100%);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+        /* TAG MANAGER PORTAL BUTTON - END COPYING HERE */
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 class="demo-title">VinditScandit Tag Manager Portal Button</h1>
+        <p>This is the portal button component to integrate into your vinditscandit.co.za website:</p>
+        
+        <!-- DEFAULT STYLE -->
+        <h3>Default Style (Purple Gradient):</h3>
+        <div class="tag-manager-portal">
+            <a href="https://your-tag-manager-domain.com" class="tag-manager-btn" target="_blank" rel="noopener noreferrer">
+                <svg class="tag-manager-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="tag-manager-text">Access Tag Manager</span>
+            </a>
+        </div>
+
+        <!-- GREEN STYLE -->
+        <h3>Green Style:</h3>
+        <div class="tag-manager-portal">
+            <a href="https://your-tag-manager-domain.com" class="tag-manager-btn style-green" target="_blank" rel="noopener noreferrer">
+                <svg class="tag-manager-icon" viewBox="0 0 24 24">
+                    <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                </svg>
+                <span class="tag-manager-text">NFC Tag Manager</span>
+            </a>
+        </div>
+
+        <!-- ORANGE/PINK STYLE -->
+        <h3>Orange/Pink Style:</h3>
+        <div class="tag-manager-portal">
+            <a href="https://your-tag-manager-domain.com" class="tag-manager-btn style-orange" target="_blank" rel="noopener noreferrer">
+                <svg class="tag-manager-icon" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span class="tag-manager-text">Manage NFC Tags</span>
+            </a>
+        </div>
+
+        <div class="code-section">
+            <h3>Integration Instructions:</h3>
+            <ol>
+                <li>Copy the CSS code between the "TAG MANAGER PORTAL BUTTON" comments</li>
+                <li>Add it to your vinditscandit.co.za stylesheet</li>
+                <li>Copy one of the HTML button examples above</li>
+                <li>Replace "https://your-tag-manager-domain.com" with your actual tag manager URL</li>
+                <li>Place the button wherever you want it on your website</li>
+            </ol>
+        </div>
+
+        <div class="code-section">
+            <h3>Customization Options:</h3>
+            <ul>
+                <li><strong>Colors:</strong> Choose from default (purple), green, or orange/pink styles</li>
+                <li><strong>Text:</strong> Change the button text to match your branding</li>
+                <li><strong>Icon:</strong> Replace the SVG icon with your preferred icon</li>
+                <li><strong>Size:</strong> Adjust padding and font-size in the CSS</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

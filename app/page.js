@@ -5,9 +5,9 @@ export default function HomePage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="text-center max-w-md w-full">
         <div className="mb-8">
-          <img 
-            src="/FindIT.jpeg" 
-            alt="VinditScandit Logo" 
+          <img
+            src="/FindIT.jpeg"
+            alt="VinditScandit Logo"
             className="h-32 w-32 mx-auto mb-4"
           />
         </div>
@@ -18,14 +18,14 @@ export default function HomePage() {
           Manage your NFC tags with ease. Access your dashboard.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4 sm:space-y-0">
-          <Link 
-            href="/client/dashboard" 
+          <Link
+            href="/client/dashboard"
             className="w-full sm:w-auto px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center font-medium touch-manipulation"
           >
             Client Dashboard
           </Link>
-          <Link 
-            href="/admin/login" 
+          <Link
+            href="/admin/login"
             className="w-full sm:w-auto px-6 py-3 text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors duration-200 text-center font-medium touch-manipulation"
           >
             Admin Login

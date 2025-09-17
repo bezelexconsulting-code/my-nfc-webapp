@@ -164,3 +164,50 @@ body {
     padding: 0.5rem;
   }
 }
+
+/* Mobile Text Visibility Improvements */
+@media (max-width: 768px) {
+  /* Improve text visibility on mobile */
+  h1, h2, h3, h4, h5, h6 {
+    color: #111827 !important; /* Very dark gray for headings */
+    font-weight: 700 !important; /* Make headings bolder */
+  }
+
+  /* Make all text darker and more visible on mobile */
+  p, span, div, td, th, label {
+    color: #1f2937 !important; /* Dark gray for better contrast */
+  }
+
+  /* Specific improvements for tag names and content */
+  .text-gray-900 {
+    color: #111827 !important; /* Even darker for primary text */
+  }
+
+  .text-gray-800 {
+    color: #1f2937 !important; /* Darker gray */
+  }
+
+  .text-gray-700 {
+    color: #374151 !important; /* Medium dark gray */
+  }
+
+  .text-gray-600 {
+    color: #4b5563 !important; /* Slightly lighter but still visible */
+  }
+
+  /* Loading states - make them more visible */
+  .text-blue-600 {
+    color: #1d4ed8 !important; /* Darker blue */
+  }
+
+  /* Ensure buttons have good contrast */
+  button {
+    font-weight: 600 !important;
+  }
+
+  /* Make sure all interactive elements are visible */
+  a {
+    color: #1d4ed8 !important;
+    font-weight: 500 !important;
+  }
+}

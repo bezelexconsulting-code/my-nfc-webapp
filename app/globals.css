@@ -211,3 +211,88 @@ body {
     font-weight: 500 !important;
   }
 }
+
+/* Enhanced Text Visibility for Better Readability */
+.text-gray-500 {
+  color: #374151 !important;
+}
+
+.text-gray-400 {
+  color: #4b5563 !important;
+}
+
+.text-gray-300 {
+  color: #6b7280 !important;
+}
+
+@media (max-width: 768px) {
+  .text-gray-500 {
+    color: #1f2937 !important;
+  }
+  
+  .text-gray-400 {
+    color: #374151 !important;
+  }
+  
+  .text-gray-300 {
+    color: #4b5563 !important;
+  }
+}
+
+/* Enhanced visibility for public tag pages */
+.bg-gray-50 {
+  background-color: #ffffff !important; /* Pure white background */
+}
+
+/* Ensure all text on public pages is highly visible */
+.text-gray-900 {
+  color: #000000 !important; /* Pure black for maximum contrast */
+}
+
+/* Make sure contact info and other content is very visible */
+.text-blue-900 {
+  color: #1e3a8a !important; /* Very dark blue */
+}
+
+.text-green-900 {
+  color: #14532d !important; /* Very dark green */
+}
+
+.text-purple-900 {
+  color: #581c87 !important; /* Very dark purple */
+}
+
+/* Ensure links are highly visible */
+.text-blue-800 {
+  color: #1e40af !important;
+}
+
+.hover\:text-blue-900:hover {
+  color: #1e3a8a !important;
+}
+
+/* Mobile specific enhancements for public pages */
+@media (max-width: 768px) {
+  .text-gray-900 {
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+  
+  .text-blue-900,
+  .text-green-900,
+  .text-purple-900 {
+    color: #000000 !important;
+    font-weight: 700 !important;
+  }
+  
+  /* Ensure all paragraph text is black on mobile */
+  p {
+    color: #000000 !important;
+  }
+  
+  /* Make headings even more prominent */
+  h1, h2 {
+    color: #000000 !important;
+    font-weight: 800 !important;
+  }
+}

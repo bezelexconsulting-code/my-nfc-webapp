@@ -1,4 +1,5 @@
-﻿import React from 'react';
+﻿"use client";
+import React from 'react';
 
 const GoogleMapsAddress = ({ address }) => {
   // Format the address for Google Maps URL
@@ -57,7 +58,7 @@ const GoogleMapsAddress = ({ address }) => {
           rel="noopener noreferrer"
           className="maps-link"
         >
-          �� View on Google Maps
+          📍 View on Google Maps
         </a>
       )}
       

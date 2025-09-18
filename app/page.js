@@ -1,13 +1,16 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
+import Image from 'next/image';
 
 export default function HomePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="text-center max-w-md w-full">
         <div className="mb-8">
-          <img
+          <Image
             src="/FindIT.jpeg"
             alt="VinditScandit Logo"
+            width={128}
+            height={128}
             className="h-32 w-32 mx-auto mb-4"
           />
         </div>

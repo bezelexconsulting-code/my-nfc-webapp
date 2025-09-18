@@ -1,4 +1,6 @@
-﻿import React from 'react';
+'use client';
+
+import React from 'react';
 
 const GoogleMapsAddress = ({ address }) => {
   // Format the address for Google Maps URL

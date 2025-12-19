@@ -52,17 +52,24 @@ After setting up the database:
    - `https://my-nfc-webapp-4d2d6mvq8-donovans-projects-17201c26.vercel.app/scan?id=TAG_ID`
 
 ## 🚀 Current Status
-- ✅ Application deployed to production: https://my-nfc-webapp-ixdtsio3b-donovans-projects-17201c26.vercel.app
+- ✅ Application deployed to production: https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app
 - ✅ Database configured with Neon PostgreSQL
 - ✅ Environment variables configured in Vercel
 - ✅ Database migration completed
 - ✅ Production deployment accessible without authentication
+- ✅ Deletion functionality fixed and deployed
+- ✅ Admin interface with tag/client deletion capabilities
 - ⏳ NFC testing pending
 
 ## ✅ NFC Tag URLs
 
 **Production URLs for NFC Programming:**
-- **tag-test-1**: `https://my-nfc-webapp-ixdtsio3b-donovans-projects-17201c26.vercel.app/public-tag/tag-test-1`
-- **Tag2**: `https://my-nfc-webapp-ixdtsio3b-donovans-projects-17201c26.vercel.app/public-tag/Tag2`
+- **tag-test-1**: `https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/public-tag/tag-test-1`
+- **Tag2**: `https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/public-tag/Tag2`
+
+## 🔐 Admin Access
+- **Admin Login**: `https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/admin/login`
+- **Admin Dashboard**: `https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/admin`
+- **Admin Password**: `secret123` (for testing - change in production)
 
 **Important**: Use slugs without spaces for NFC compatibility. Avoid slugs like "Tag Test 1" as they require URL encoding which doesn't work well with NFC readers.

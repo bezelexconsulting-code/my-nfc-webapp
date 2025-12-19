@@ -75,7 +75,7 @@ export async function PUT(req, { params }) {
   }
 }
 
-// DELETE a client
+// DELETE a tag
 export async function DELETE(req, { params }) {
   try {
     const { error, status } = await checkAdmin(req);
@@ -84,33 +84,44 @@ export async function DELETE(req, { params }) {
     }
 
     const { id } = params;
+    const tagId = parseInt(id);
 
-    // Prisma will handle cascading deletes if configured in the schema.
-    await prisma.client.delete({
-      where: { id: parseInt(id) },
+    if (isNaN(tagId)) {
+      return new Response(JSON.stringify({ error: "Invalid tag ID" }), {
+        status: 400,
+      });
+    }
+
+    // Check if tag exists
+    const existingTag = await prisma.tag.findUnique({
+      where: { id: tagId },
     });
 
-    return new Response(null, { status: 204 }); // No Content
-  } catch (error) {
-    console.error(`DELETE /api/clients/${params.id} error:`, error);
-    if (error.code === "P2025") {
-      // Prisma error code for record not found
-      return new Response(JSON.stringify({ error: "Client not found" }), {
+    if (!existingTag) {
+      return new Response(JSON.stringify({ error: "Tag not found" }), {
         status: 404,
       });
     }
-    // Foreign key constraint failed
-    if (error.code === "P2003") {
-      return new Response(
-        JSON.stringify({
-          error:
-            "Cannot delete client. They still have tags assigned to them. Please reassign or delete the tags first.",
-        }),
-        { status: 409 }
-      );
+
+    // Delete the tag
+    await prisma.tag.delete({
+      where: { id: tagId },
+    });
+
+    return new Response(JSON.stringify({ message: "Tag deleted successfully" }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error(`DELETE /api/tags/${params.id} error:`, error);
+    if (error.code === "P2025") {
+      // Prisma error code for record not found
+      return new Response(JSON.stringify({ error: "Tag not found" }), {
+        status: 404,
+      });
     }
     return new Response(
-      JSON.stringify({ error: "Failed to delete client" }),
+      JSON.stringify({ error: "Failed to delete tag" }),
       { status: 500 }
     );
   }

@@ -26,10 +26,12 @@ export default function Dashboard() {
     setLoading(true);
     setError("");
     try {
+      const trimmedName = typeof name === "string" ? name.trim() : name;
+      const trimmedPassword = typeof password === "string" ? password.trim() : password;
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, password }),
+        body: JSON.stringify({ name: trimmedName, password: trimmedPassword }),
       });
       const data = await res.json();
       if (data.success) {
@@ -61,7 +63,8 @@ export default function Dashboard() {
             phone1: newData.phone1,
             phone2: newData.phone2,
             address: newData.address,
-            url: newData.url
+            url: newData.url,
+            instructions: newData.instructions
         }),
       });
       
@@ -249,6 +252,19 @@ export default function Dashboard() {
                         rows="3"
                       />
                     </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Instructions
+                      </label>
+                      <textarea
+                        value={tagForms[tag.id]?.instructions || ""}
+                        onChange={(e) => handleInputChange(tag.id, 'instructions', e.target.value)}
+                        placeholder="Add instructions for visitors..."
+                        className="w-full rounded-lg border border-gray-300 p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation resize-none"
+                        rows="3"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-gray-100">
@@ -277,4 +293,3 @@ export default function Dashboard() {
      </div>
    );
 }
-

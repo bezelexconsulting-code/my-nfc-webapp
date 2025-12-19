@@ -10,7 +10,7 @@ generator client {
 model Client {
   id               Int       @id @default(autoincrement())
   name             String    @unique
-  password         String    // hashed password
+  password         String // hashed password
   email            String?   @unique
   resetToken       String?   @unique
   resetTokenExpiry DateTime?
@@ -18,22 +18,23 @@ model Client {
 }
 
 model Tag {
-  id         Int      @id @default(autoincrement())
-  slug       String   @unique
-  name       String
-  phone1     String
-  phone2     String
-  address    String   // Legacy field for backward compatibility
-  street     String?  // Street address
-  city       String?  // City
-  province   String?  // Province/State
-  postalCode String?  // Postal/ZIP code
-  country    String?  // Country
-  url        String   @default("")
-  clientId   Int
-  client     Client   @relation(fields: [clientId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  name         String
+  phone1       String
+  phone2       String
+  address      String // Legacy field for backward compatibility
+  street       String? // Street address
+  city         String? // City
+  province     String? // Province/State
+  postalCode   String? // Postal/ZIP code
+  country      String? // Country
+  url          String   @default("")
+  instructions String?  // Instructions for the client
+  clientId     Int
+  client       Client   @relation(fields: [clientId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Admin {

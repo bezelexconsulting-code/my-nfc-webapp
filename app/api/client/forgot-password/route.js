@@ -42,7 +42,26 @@ export async function POST(request) {
     });
 
     // Send password reset email
-    const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/client/reset-password?token=${resetToken}`;
+    // Prefer the current request origin (domain user is on), then env, then tags domain
+    const currentUrl = new URL(request.url);
+    let originFromRequest = `${currentUrl.protocol}//${currentUrl.host}`;
+    
+    // Replace 0.0.0.0 with localhost for local development (0.0.0.0 is not valid for browsers)
+    if (originFromRequest.includes('0.0.0.0')) {
+      originFromRequest = originFromRequest.replace('0.0.0.0', 'localhost');
+    }
+    
+    const baseUrl = originFromRequest || process.env.NEXTAUTH_URL || 'https://tags.vinditscandit.co.za';
+    const resetLink = `${baseUrl}/client/reset-password?token=${resetToken}`;
+    
+    // Validate resetLink is absolute URL starting with http
+    if (!resetLink.startsWith('http')) {
+      console.error('Invalid resetLink generated - not absolute URL:', resetLink);
+      return NextResponse.json(
+        { error: 'Internal server error - invalid reset link' },
+        { status: 500 }
+      );
+    }
     
     try {
       await sendPasswordResetEmail(email, resetLink);

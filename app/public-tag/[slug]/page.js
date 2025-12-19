@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useState, useEffect } from "react";
 
 export default function PublicTagPage({ params }) {
@@ -75,8 +75,26 @@ export default function PublicTagPage({ params }) {
 
           <div className="rounded-md bg-green-100 p-5 border-2 border-green-300">
             <h2 className="mb-3 text-xl font-bold text-green-900">Location</h2>
-            <p className="text-gray-900 text-lg leading-relaxed">{tag.address || "Address not available"}</p>
+            {tag.address ? (
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tag.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-800 hover:text-blue-900 hover:underline text-lg leading-relaxed block"
+              >
+                {tag.address}
+              </a>
+            ) : (
+              <p className="text-gray-900 text-lg leading-relaxed">Address not available</p>
+            )}
           </div>
+
+          {tag.instructions && (
+            <div className="rounded-md bg-yellow-100 p-5 border-2 border-yellow-300">
+              <h2 className="mb-3 text-xl font-bold text-yellow-900">Instructions</h2>
+              <p className="text-gray-900 text-lg leading-relaxed whitespace-pre-wrap">{tag.instructions}</p>
+            </div>
+          )}
 
           {tag.url && (
             <div className="rounded-md bg-purple-100 p-5 border-2 border-purple-300">

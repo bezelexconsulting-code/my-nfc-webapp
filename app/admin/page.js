@@ -263,6 +263,35 @@ export default function AdminPage() {
     }
   }
 
+  // Delete tag function
+  async function deleteTag(tagId) {
+    if (!confirm("Are you sure you want to delete this tag? This action cannot be undone.")) {
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/tags/${tagId}`, {
+        method: "DELETE",
+        headers: { "x-admin-token": token },
+      });
+      if (!res.ok) {
+        const errorMsg = await getErrorFromResponse(res);
+        setError(errorMsg);
+      } else {
+        await loadTags(token); // Reload all tags
+        // If we're viewing client tags, reload those too
+        if (selectedClientForView) {
+          await loadClientTags(selectedClientForView.id, token);
+        }
+      }
+    } catch (err) {
+      setError("Failed to delete tag");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto p-4 max-w-7xl">
@@ -519,9 +548,17 @@ export default function AdminPage() {
                                   </span>
                                 </td>
                                 <td className="p-3">
-                                  <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
-                                    View
-                                  </a>
+                                  <div className="flex space-x-2">
+                                    <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
+                                      View
+                                    </a>
+                                    <button
+                                      onClick={() => deleteTag(tag.id)}
+                                      className="text-sm text-red-600 hover:text-red-800 hover:underline transition-colors duration-200"
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
                                 </td>
                               </tr>
                             ))}
@@ -555,7 +592,13 @@ export default function AdminPage() {
                                 >
                                   View Tag
                                 </a>
-                              </div>
+                                <button
+                                  onClick={() => deleteTag(tag.id)}
+                                  className="inline-block rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors duration-200 touch-manipulation"
+                                >
+                                  Delete
+                                </button>
+                                </div>
                             </div>
                           </div>
                         ))}
@@ -600,9 +643,17 @@ export default function AdminPage() {
                                 </span>
                               </td>
                               <td className="p-3">
-                                <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
-                                  View
-                                </a>
+                                <div className="flex space-x-2">
+                                  <a href={`/public-tag/${tag.slug}`} target="_blank" className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
+                                    View
+                                  </a>
+                                  <button
+                                    onClick={() => deleteTag(tag.id)}
+                                    className="text-sm text-red-600 hover:text-red-800 hover:underline transition-colors duration-200"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           ))}
@@ -630,13 +681,21 @@ export default function AdminPage() {
                               </span>
                             </div>
                             <div className="pt-2">
-                              <a 
-                                href={`/public-tag/${tag.slug}`} 
-                                target="_blank" 
-                                className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200 touch-manipulation"
-                              >
-                                View Tag
-                              </a>
+                              <div className="flex space-x-2">
+                                <a 
+                                  href={`/public-tag/${tag.slug}`} 
+                                  target="_blank" 
+                                  className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200 touch-manipulation"
+                                >
+                                  View Tag
+                                </a>
+                                <button
+                                  onClick={() => deleteTag(tag.id)}
+                                  className="inline-block rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors duration-200 touch-manipulation"
+                                >
+                                  Delete
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>

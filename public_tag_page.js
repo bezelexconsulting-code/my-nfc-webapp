@@ -1,8 +1,7 @@
-'use client';
-
+'use server';
 import React from 'react';
 import { notFound } from 'next/navigation';
-import GoogleMapsAddress from '../../../components/GoogleMapsAddress';
+import GoogleMapsAddress from './components/GoogleMapsAddress';
 
 async function getTag(slug) {
   try {

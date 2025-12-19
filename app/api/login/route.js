@@ -1,16 +1,31 @@
 import { PrismaClient } from "@prisma/client";
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 
+export const runtime = "nodejs";
 const prisma = new PrismaClient();
 
 export async function POST(req) {
   const body = await req.json();
-  const { name, password } = body;
+  let { name, password } = body;
 
-  const client = await prisma.client.findUnique({
-    where: { name },
-    include: { tags: true },
-  });
+  // Normalize inputs
+  if (typeof name === "string") {
+    name = name.trim();
+  }
+
+  const identifier = name;
+  let client = null;
+  if (identifier && identifier.includes("@")) {
+    client = await prisma.client.findUnique({
+      where: { email: identifier },
+      include: { tags: true },
+    });
+  } else {
+    client = await prisma.client.findUnique({
+      where: { name: identifier },
+      include: { tags: true },
+    });
+  }
 
   if (!client) {
     return new Response(JSON.stringify({ error: "Client not found" }), { status: 404 });

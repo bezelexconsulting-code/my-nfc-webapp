@@ -1,11 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 
+export const runtime = "nodejs";
 const prisma = new PrismaClient();
 
 export async function POST(req) {
   try {
-    const { name, email, password } = await req.json();
+    let { name, email, password } = await req.json();
+
+    // Normalize inputs
+    if (typeof name === "string") {
+      name = name.trim();
+    }
+    if (typeof email === "string") {
+      email = email.trim();
+    }
 
     // Validation
     if (!name || !password) {

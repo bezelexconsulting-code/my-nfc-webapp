@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +37,7 @@ export async function PUT(req, { params }) {
     }
 
     const { id } = params;
-    const { name, phone1, phone2, address, url } = await req.json();
+    const { name, phone1, phone2, address, url, instructions } = await req.json();
 
     // Check if the tag belongs to the authenticated client
     const tag = await prisma.tag.findUnique({
@@ -67,6 +67,7 @@ export async function PUT(req, { params }) {
         phone2: phone2 || tag.phone2,
         address: address || tag.address,
         url: url !== undefined ? url : tag.url,
+        instructions: instructions !== undefined ? instructions : tag.instructions,
       },
     });
 

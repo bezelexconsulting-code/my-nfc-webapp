@@ -46,12 +46,14 @@ export async function PUT(req, { params }) {
     });
 
     if (!tag) {
+      console.log(`Tag not found: ${id}`);
       return new Response(JSON.stringify({ error: "Tag not found" }), {
         status: 404,
       });
     }
 
     if (tag.clientId !== client.id) {
+      console.log(`Unauthorized update attempt. Tag Client ID: ${tag.clientId}, Request Client ID: ${client.id}`);
       return new Response(
         JSON.stringify({ error: "You can only update your own tags" }),
         { status: 403 }
@@ -62,10 +64,10 @@ export async function PUT(req, { params }) {
     const updatedTag = await prisma.tag.update({
       where: { id: parseInt(id) },
       data: {
-        name: name || tag.name,
-        phone1: phone1 || tag.phone1,
-        phone2: phone2 || tag.phone2,
-        address: address || tag.address,
+        name: name !== undefined ? name : tag.name,
+        phone1: phone1 !== undefined ? phone1 : tag.phone1,
+        phone2: phone2 !== undefined ? phone2 : tag.phone2,
+        address: address !== undefined ? address : tag.address,
         url: url !== undefined ? url : tag.url,
         instructions: instructions !== undefined ? instructions : tag.instructions,
       },

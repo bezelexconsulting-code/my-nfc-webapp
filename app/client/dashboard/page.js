@@ -61,12 +61,12 @@ export default function Dashboard() {
           "x-client-password": trimmedPassword
         },
         body: JSON.stringify({ 
-            name: newData.name,
-            phone1: newData.phone1,
-            phone2: newData.phone2,
-            address: newData.address,
-            url: newData.url,
-            instructions: newData.instructions
+            name: newData.name ?? "",
+            phone1: newData.phone1 ?? "",
+            phone2: newData.phone2 ?? "",
+            address: newData.address ?? "",
+            url: newData.url ?? "",
+            instructions: newData.instructions ?? ""
         }),
       });
       

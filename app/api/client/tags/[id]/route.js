@@ -36,7 +36,7 @@ export async function PUT(req, { params }) {
       return new Response(JSON.stringify({ error }), { status });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const { name, phone1, phone2, address, url, instructions } = await req.json();
 
     // Check if the tag belongs to the authenticated client
@@ -75,9 +75,10 @@ export async function PUT(req, { params }) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error(`PUT /api/client/tags/${params.id} error:`, error);
+    const { id } = await params;
+    console.error(`PUT /api/client/tags/${id} error:`, error);
     return new Response(
-      JSON.stringify({ error: "Failed to update tag" }),
+      JSON.stringify({ error: "Failed to update tag", details: error.message }),
       { status: 500 }
     );
   }

@@ -51,12 +51,14 @@ export default function Dashboard() {
     setError("");
     setSaveSuccess("");
     try {
+      const trimmedName = typeof name === "string" ? name.trim() : name;
+      const trimmedPassword = typeof password === "string" ? password.trim() : password;
       const res = await fetch(`/api/client/tags/${tagId}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
-          "x-client-name": name,
-          "x-client-password": password
+          "x-client-name": trimmedName,
+          "x-client-password": trimmedPassword
         },
         body: JSON.stringify({ 
             name: newData.name,

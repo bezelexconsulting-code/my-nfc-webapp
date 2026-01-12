@@ -25,7 +25,8 @@ export async function PUT(req, { params }) {
       return new Response(JSON.stringify({ error }), { status });
     }
 
-    const clientId = parseInt(params.id);
+    const { id } = await params;
+    const clientId = parseInt(id);
     if (isNaN(clientId)) {
       return new Response(JSON.stringify({ error: 'Invalid client ID' }), {
         status: 400,
@@ -71,7 +72,8 @@ export async function PUT(req, { params }) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error(`PUT /api/clients/${params.id} error:`, error);
+    const { id } = await params;
+    console.error(`PUT /api/clients/${id} error:`, error);
     if (error.code === 'P2025') {
       // Prisma error code for record not found
       return new Response(JSON.stringify({ error: 'Client not found' }), {
@@ -93,7 +95,8 @@ export async function DELETE(req, { params }) {
       return new Response(JSON.stringify({ error }), { status });
     }
 
-    const clientId = parseInt(params.id);
+    const { id } = await params;
+    const clientId = parseInt(id);
     if (isNaN(clientId)) {
       return new Response(JSON.stringify({ error: 'Invalid client ID' }), {
         status: 400,

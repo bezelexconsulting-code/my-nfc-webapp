@@ -16,7 +16,7 @@ async function checkAdmin(req) {
   return { admin };
 }
 
-// UPDATE a client
+// UPDATE a tag (admin)
 export async function PUT(req, { params }) {
   try {
     const { error, status } = await checkAdmin(req);
@@ -24,52 +24,60 @@ export async function PUT(req, { params }) {
       return new Response(JSON.stringify({ error }), { status });
     }
 
-    const { id } = params;
-    const { name, email } = await req.json();
-
-    if (!name && !email) {
-      return new Response(
-        JSON.stringify({ error: "Name or email is required for update" }),
-        { status: 400 }
-      );
-    }
-
-    // If email is being changed, check if the new one is already taken
-    if (email) {
-      const existingClient = await prisma.client.findFirst({
-        where: {
-          email,
-          id: { not: parseInt(id) },
-        },
+    const { id } = await params;
+    const tagId = parseInt(id);
+    if (isNaN(tagId)) {
+      return new Response(JSON.stringify({ error: "Invalid tag ID" }), {
+        status: 400,
       });
-      if (existingClient) {
-        return new Response(
-          JSON.stringify({ error: "Email already in use by another client" }),
-          { status: 409 }
-        );
-      }
     }
 
-    const updatedClient = await prisma.client.update({
-      where: { id: parseInt(id) },
-      data: {
-        name: name,
-        email: email,
-      },
+    const data = await req.json();
+    
+    // Check if tag exists
+    const existingTag = await prisma.tag.findUnique({
+      where: { id: tagId },
     });
 
-    const { password, ...clientData } = updatedClient;
-    return new Response(JSON.stringify(clientData), { status: 200 });
-  } catch (error) {
-    console.error(`PUT /api/clients/${params.id} error:`, error);
-    if (error.code === "P2025") {
-      // Prisma error code for record not found
-      return new Response(JSON.stringify({ error: "Client not found" }), {
+    if (!existingTag) {
+      return new Response(JSON.stringify({ error: "Tag not found" }), {
         status: 404,
       });
     }
+
+    // Update the tag
+    // Allow updating any field passed in body that exists in schema
+    // Sanitize data to avoid updating protected fields if necessary
+    // For now, we allow updating most fields
+    const updatedTag = await prisma.tag.update({
+      where: { id: tagId },
+      data: {
+        slug: data.slug,
+        name: data.name,
+        phone1: data.phone1,
+        phone2: data.phone2,
+        address: data.address,
+        street: data.street,
+        city: data.city,
+        province: data.province,
+        postalCode: data.postalCode,
+        country: data.country,
+        url: data.url,
+        instructions: data.instructions,
+        clientId: data.clientId ? parseInt(data.clientId) : undefined,
+      },
+    });
+
+    return new Response(JSON.stringify(updatedTag), { status: 200 });
+  } catch (error) {
+    console.error(`PUT /api/tags/${params.id} error:`, error);
+    if (error.code === "P2002") {
+       return new Response(JSON.stringify({ error: "Slug already exists" }), {
+        status: 409,
+      });
+    }
     return new Response(
-      JSON.stringify({ error: "Failed to update client" }),
+      JSON.stringify({ error: "Failed to update tag" }),
       { status: 500 }
     );
   }
@@ -83,7 +91,7 @@ export async function DELETE(req, { params }) {
       return new Response(JSON.stringify({ error }), { status });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const tagId = parseInt(id);
 
     if (isNaN(tagId)) {

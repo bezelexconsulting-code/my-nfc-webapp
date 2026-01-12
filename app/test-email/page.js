@@ -92,15 +92,15 @@ export default function TestEmailPage() {
         <h3>Instructions:</h3>
         <ol>
           <li>Enter your email address above</li>
-          <li>Click "Send Test Email"</li>
+          <li>Click &quot;Send Test Email&quot;</li>
           <li>Check your email for the reset button/link</li>
           <li>Verify that the button is clickable and works properly</li>
         </ol>
         
         <p><strong>What to look for in the email:</strong></p>
         <ul>
-          <li>A blue "Reset Password" button that is clickable</li>
-          <li>An alternative text link that says "Click here to reset your password"</li>
+          <li>A blue &quot;Reset Password&quot; button that is clickable</li>
+          <li>An alternative text link that says &quot;Click here to reset your password&quot;</li>
           <li>The full URL displayed at the bottom for copy/paste</li>
         </ul>
       </div>

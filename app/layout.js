@@ -1,4 +1,4 @@
-﻿import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
 import "./globals.css";
 
@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center">
                 <Image
-                  src="/FindIT.jpeg"
+                  src="/FindIT.png"
                   alt="VinditScandit Logo"
                   width={48}
                   height={48}

@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -7,7 +7,7 @@ export default function HomePage() {
       <div className="text-center max-w-md w-full">
         <div className="mb-8">
           <Image
-            src="/FindIT.jpeg"
+            src="/FindIT.png"
             alt="VinditScandit Logo"
             width={128}
             height={128}
@@ -38,3 +38,4 @@ export default function HomePage() {
     </div>
   );
 }
+

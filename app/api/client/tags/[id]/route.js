@@ -1,43 +1,18 @@
 import { PrismaClient } from "@prisma/client";
-import { compare } from "bcryptjs";
+import { getClientFromRequest } from "../../../../../lib/auth";
 
 const prisma = new PrismaClient();
-
-// Helper function to authenticate client
-async function authenticateClient(req) {
-  const clientName = req.headers.get("x-client-name");
-  const clientPassword = req.headers.get("x-client-password");
-  
-  if (!clientName || !clientPassword) {
-    return { error: "Client authentication required", status: 401 };
-  }
-  
-  const client = await prisma.client.findUnique({
-    where: { name: clientName },
-  });
-  
-  if (!client) {
-    return { error: "Client not found", status: 404 };
-  }
-  
-  const isValid = await compare(clientPassword, client.password);
-  if (!isValid) {
-    return { error: "Invalid client credentials", status: 401 };
-  }
-  
-  return { client };
-}
 
 // UPDATE a tag (client can only update their own tags)
 export async function PUT(req, { params }) {
   try {
-    const { error, status, client } = await authenticateClient(req);
+    const { error, status, client } = await getClientFromRequest(req);
     if (error) {
       return new Response(JSON.stringify({ error }), { status });
     }
 
     const { id } = await params;
-    const { name, phone1, phone2, address, url, instructions } = await req.json();
+    const { name, phone1, phone2, address, url, instructions, imageUrl } = await req.json();
 
     // Check if the tag belongs to the authenticated client
     const tag = await prisma.tag.findUnique({
@@ -70,6 +45,7 @@ export async function PUT(req, { params }) {
         address: address !== undefined ? address : tag.address,
         url: url !== undefined ? url : tag.url,
         instructions: instructions !== undefined ? instructions : tag.instructions,
+        imageUrl: imageUrl !== undefined ? imageUrl : tag.imageUrl,
       },
     });
 
@@ -83,5 +59,54 @@ export async function PUT(req, { params }) {
       JSON.stringify({ error: "Failed to update tag", details: error.message }),
       { status: 500 }
     );
+  }
+}
+
+// DELETE a tag (client can only delete their own tags)
+export async function DELETE(req, { params }) {
+  try {
+    const { error, status, client } = await getClientFromRequest(req);
+    if (error) {
+      return new Response(JSON.stringify({ error }), { status });
+    }
+
+    const { id } = await params;
+
+    // Check if the tag belongs to the authenticated client
+    const tag = await prisma.tag.findUnique({
+      where: { id: parseInt(id) },
+      include: { client: true },
+    });
+
+    if (!tag) {
+      return new Response(JSON.stringify({ error: "Tag not found" }), {
+        status: 404,
+      });
+    }
+
+    if (tag.clientId !== client.id) {
+      return new Response(
+        JSON.stringify({ error: "You can only delete your own tags" }),
+        { status: 403 }
+      );
+    }
+
+    // Delete the tag
+    await prisma.tag.delete({
+      where: { id: parseInt(id) },
+    });
+
+    return new Response(JSON.stringify({ message: "Tag deleted successfully" }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    const { id } = await params;
+    console.error(`DELETE /api/client/tags/${id} error:`, error);
+    return new Response(
+      JSON.stringify({ error: "Failed to delete tag", details: error.message }),
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }

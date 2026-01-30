@@ -39,8 +39,14 @@ export async function POST(req) {
   return new Response(
     JSON.stringify({
       success: true,
-      client: { id: client.id, name: client.name },
+      client: { 
+        id: client.id, 
+        name: client.name,
+        email: client.email,
+        emailVerified: client.emailVerified || false,
+      },
       tags: client.tags || [],
+      tagCount: client.tags?.length || 0,
     }),
     { headers: { "Content-Type": "application/json" } }
   );

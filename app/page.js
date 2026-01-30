@@ -22,6 +22,12 @@ export default function HomePage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4 sm:space-y-0">
           <Link
+            href="/demo"
+            className="w-full sm:w-auto px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg hover:from-blue-700 hover:to-teal-700 transition-colors duration-200 text-center font-medium touch-manipulation shadow-lg"
+          >
+            🎬 View Demo
+          </Link>
+          <Link
             href="/client/dashboard"
             className="w-full sm:w-auto px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center font-medium touch-manipulation"
           >

@@ -15,9 +15,26 @@ export async function POST(request) {
       );
     }
 
-    if (password.length < 6) {
+    // Password strength validation (same as registration)
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
+        { error: 'Password must be at least 8 characters long' },
+        { status: 400 }
+      );
+    }
+
+    const passwordChecks = {
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[^A-Za-z0-9]/.test(password),
+    };
+
+    if (!passwordChecks.uppercase || !passwordChecks.lowercase || !passwordChecks.number || !passwordChecks.special) {
+      return NextResponse.json(
+        { 
+          error: 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character' 
+        },
         { status: 400 }
       );
     }

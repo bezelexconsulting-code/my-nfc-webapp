@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vinditscandit</string>
+    <string name="tagline">Tap To Send Me Home</string>
+    
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="email_or_username">Email or Username</string>
+    <string name="password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="register_link">Don\'t have an account? Register here</string>
+    <string name="forgot_password">Forgot Password?</string>
+    
+    <!-- Main Activity -->
+    <string name="welcome">Welcome</string>
+    <string name="select_tag_to_write">Select Tag to Write</string>
+    <string name="tap_nfc_tag">Tap NFC Tag to Write</string>
+    <string name="writing_to_tag">Writing to tag…</string>
+    <string name="write_success">Successfully wrote to NFC tag!</string>
+    <string name="write_failed">Failed to write to NFC tag</string>
+    <string name="nfc_not_available">NFC is not available on this device</string>
+    <string name="nfc_disabled">Please enable NFC in settings</string>
+    
+    <!-- Tag Selection -->
+    <string name="my_tags">My Tags</string>
+    <string name="select_tag">Select Tag</string>
+    <string name="no_tags">No tags available. Create tags in the web dashboard.</string>
+    
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="biometric_enabled">Biometric Login Enabled</string>
+    
+    <!-- Errors -->
+    <string name="error_login_failed">Login failed. Please check your credentials.</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_unknown">An unexpected error occurred</string>
+    
+    <!-- Tag URL -->
+    <string name="tag_url_copied">Tag URL copied to clipboard!</string>
+    <string name="tag_url_title">Your Tag URL</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="share_url">Share</string>
+</resources>

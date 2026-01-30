@@ -8,13 +8,18 @@ generator client {
 }
 
 model Client {
-  id               Int       @id @default(autoincrement())
-  name             String    @unique
-  password         String // hashed password
-  email            String?   @unique
-  resetToken       String?   @unique
-  resetTokenExpiry DateTime?
-  tags             Tag[]
+  id                  Int       @id @default(autoincrement())
+  name                String    @unique
+  password            String?   // hashed password; null for Google-only users
+  email               String?   @unique
+  emailVerified       Boolean   @default(false)
+  emailVerificationToken String? @unique
+  emailVerificationExpiry DateTime?
+  resetToken          String?   @unique
+  resetTokenExpiry    DateTime?
+  googleId            String?   @unique // Google OAuth sub
+  image               String?   // Google profile image URL
+  tags                Tag[]
 }
 
 model Tag {
@@ -31,6 +36,7 @@ model Tag {
   country      String? // Country
   url          String   @default("")
   instructions String?  // Instructions for the client
+  imageUrl     String?  // URL to uploaded image
   clientId     Int
   client       Client   @relation(fields: [clientId], references: [id])
   createdAt    DateTime @default(now())

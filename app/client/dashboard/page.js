@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [bulkMode, setBulkMode] = useState(false);
   const [uploadingImage, setUploadingImage] = useState({});
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingTagId, setEditingTagId] = useState(null);
   const [newTagForm, setNewTagForm] = useState({
     name: "",
     phone1: "",
@@ -839,7 +840,7 @@ export default function Dashboard() {
         ) : (
           <div className="space-y-6">
             {(searchQuery ? filteredTags : client.tags)?.map((tag) => (
-              <div key={tag.id} className={`rounded-lg border ${bulkMode && selectedTags.has(tag.id) ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700'} bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-sm`}>
+              <div key={tag.id} className={`rounded-lg border ${bulkMode && selectedTags.has(tag.id) ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700'} bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-md`}>
                 {bulkMode && (
                   <div className="mb-4">
                     <input
@@ -850,15 +851,127 @@ export default function Dashboard() {
                     />
                   </div>
                 )}
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-800 dark:text-white">{tag.slug}</h3>
-                  <span className="rounded-full bg-blue-100 dark:bg-blue-900 px-2 py-1 text-xs text-blue-800 dark:text-blue-200">
-                    ID: {tag.id}
-                  </span>
-                </div>
                 
-                {!bulkMode && (
-                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); updateTag(tag.id, tagForms[tag.id]); }}>
+                {/* Card View (Read-Only) */}
+                {!bulkMode && editingTagId !== tag.id && (
+                  <>
+                    {/* Tag Header with Image */}
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="flex-shrink-0">
+                        {tag.imageUrl ? (
+                          <img
+                            src={tag.imageUrl}
+                            alt={tag.name}
+                            className="w-16 h-16 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 truncate">{tag.name || tag.slug}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Added {new Date(tag.createdAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+
+                    {/* Tag Info List */}
+                    <div className="space-y-3 mb-6">
+                      {tag.phone1 && (
+                        <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                          <svg className="w-5 h-5 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                          <span className="font-medium">{tag.phone1}</span>
+                        </div>
+                      )}
+                      {tag.phone2 && (
+                        <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                          <svg className="w-5 h-5 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                          <span>{tag.phone2}</span>
+                        </div>
+                      )}
+                      {tag.address && (
+                        <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                          <svg className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span className="break-words">{tag.address}</span>
+                        </div>
+                      )}
+                      {tag.instructions && (
+                        <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                          <svg className="w-5 h-5 text-gray-600 dark:text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <span className="break-words whitespace-pre-wrap">{tag.instructions}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <a
+                        href={`/tag/${tag.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        View Public Page
+                      </a>
+                      <button
+                        onClick={() => setEditingTagId(tag.id)}
+                        className="px-6 py-3 bg-white dark:bg-gray-700 border-2 border-teal-600 dark:border-teal-500 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 font-medium"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    
+                    {/* Delete Button */}
+                    <button
+                      onClick={async () => {
+                        if (confirm(`Are you sure you want to delete "${tag.name || tag.slug}"? This action cannot be undone.`)) {
+                          setLoading(true);
+                          try {
+                            const res = await fetch(`/api/client/tags/${tag.id}`, {
+                              method: "DELETE",
+                              credentials: 'include',
+                            });
+                            if (res.ok) {
+                              await refreshClientData();
+                              setSaveSuccess("Tag deleted successfully!");
+                            } else {
+                              throw new Error("Failed to delete tag");
+                            }
+                          } catch (err) {
+                            setError(err.message || "Failed to delete tag");
+                          } finally {
+                            setLoading(false);
+                          }
+                        }
+                      }}
+                      className="mt-2 w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete Tag
+                    </button>
+                  </>
+                )}
+
+                {/* Edit Form */}
+                {!bulkMode && editingTagId === tag.id && (
+                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); updateTag(tag.id, tagForms[tag.id]); setEditingTagId(null); }}>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -956,21 +1069,27 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <a 
-                      href={`/public-tag/${tag.slug}`} 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-medium touch-manipulation"
-                    >
-                      View Public Page →
-                    </a>
+                  <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
                     <button 
                       type="submit"
                       disabled={loading}
-                      className="w-full sm:w-auto rounded-lg bg-blue-600 px-6 py-3 text-base font-medium text-white hover:bg-blue-700 disabled:bg-blue-300 transition-colors duration-200 touch-manipulation"
+                      className="flex-1 rounded-lg bg-teal-600 px-6 py-3 text-base font-medium text-white hover:bg-teal-700 disabled:bg-teal-300 transition-colors duration-200 touch-manipulation"
                     >
                       {loading ? "Saving..." : "Save Changes"}
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        setEditingTagId(null);
+                        // Reset form to original values
+                        setTagForms(prev => ({
+                          ...prev,
+                          [tag.id]: { ...tag }
+                        }));
+                      }}
+                      className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 font-medium touch-manipulation"
+                    >
+                      Cancel
                     </button>
                   </div>
                 </form>

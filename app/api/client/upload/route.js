@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
 import { getClientFromRequest } from "../../../../lib/auth";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request) {
   try {
@@ -42,35 +47,41 @@ export async function POST(request) {
       );
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'public', 'uploads');
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = file.name.split('.').pop();
-    const filename = `${timestamp}-${randomString}.${extension}`;
-    const filepath = join(uploadsDir, filename);
-
-    // Convert file to buffer and save
+    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filepath, buffer);
 
-    // Return public URL
-    const publicUrl = `/uploads/${filename}`;
+    // Upload to Cloudinary
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'nfc-tags',
+          resource_type: 'image',
+          transformation: [
+            { width: 800, height: 800, crop: 'limit' }, // Max dimensions
+            { quality: 'auto' }, // Auto quality optimization
+            { fetch_format: 'auto' }, // Auto format (WebP if supported)
+          ],
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    });
 
+    // Return Cloudinary URL
     return NextResponse.json({
-      url: publicUrl,
-      filename: filename,
+      url: uploadResult.secure_url,
+      filename: uploadResult.public_id,
+      width: uploadResult.width,
+      height: uploadResult.height,
     });
   } catch (error) {
     console.error('File upload error:', error);
     return NextResponse.json(
-      { error: 'Failed to upload file' },
+      { error: 'Failed to upload file', details: error.message },
       { status: 500 }
     );
   } finally {

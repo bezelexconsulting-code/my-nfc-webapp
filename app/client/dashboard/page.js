@@ -165,6 +165,8 @@ export default function Dashboard() {
           [tagId]: { ...prev[tagId], imageUrl: data.url }
         }));
         setSaveSuccess("Image uploaded successfully!");
+        // Refresh to ensure sync
+        await refreshClientData();
       } else {
         throw new Error("Failed to update tag with image");
       }
@@ -172,6 +174,22 @@ export default function Dashboard() {
       setError(err.message || "Failed to upload image");
     } finally {
       setUploadingImage(prev => ({ ...prev, [tagId]: false }));
+    }
+  }
+
+  async function refreshClientData() {
+    try {
+      const res = await fetch("/api/client/me", { credentials: "include" });
+      const data = await res.json();
+      if (data.success && data.client) {
+        setClient({
+          client: data.client,
+          tags: data.tags || [],
+          tagCount: data.client.tagCount ?? (data.tags?.length ?? 0),
+        });
+      }
+    } catch (err) {
+      console.error("Failed to refresh client data:", err);
     }
   }
 
@@ -197,11 +215,14 @@ export default function Dashboard() {
       
       if (res.ok) {
         const updatedTag = await res.json();
+        // Immediately update local state
         setClient(prev => ({
           ...prev,
           tags: prev.tags.map(tag => tag.id === tagId ? updatedTag : tag)
         }));
         setSaveSuccess("Changes saved successfully!");
+        // Refresh to ensure sync
+        await refreshClientData();
       } else {
         const errorData = await res.json();
         setError(errorData.error || "Update failed");

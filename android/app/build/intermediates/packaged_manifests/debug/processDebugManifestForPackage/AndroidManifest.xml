@@ -76,6 +76,10 @@
             android:exported="false"
             android:theme="@style/Theme.NFCTagManager" />
         <activity
+            android:name="com.vinditscandit.nfctagmanager.ui.RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NFCTagManager" />
+        <activity
             android:name="com.vinditscandit.nfctagmanager.ui.TagSelectionActivity"
             android:exported="false"
             android:theme="@style/Theme.NFCTagManager" />

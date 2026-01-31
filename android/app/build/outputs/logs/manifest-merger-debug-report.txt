@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-73:12
-INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-73:12
-INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-73:12
-INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-73:12
+ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-78:12
+INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-78:12
+INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-78:12
+INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:2:1-78:12
 MERGED from [androidx.databinding:viewbinding:8.13.2] C:\Users\donal\.gradle\caches\9.0-milestone-1\transforms\b6e5b54eb9e2ae56b70c421dc931304e\transformed\jetified-viewbinding-8.13.2\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\donal\.gradle\caches\9.0-milestone-1\transforms\d04bac929587a6df4ec1277c55e1827e\transformed\material-1.11.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\donal\.gradle\caches\9.0-milestone-1\transforms\6e61c423f5adcf6e233ea49500e12bba\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
@@ -87,8 +87,8 @@ ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml
 	android:name
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:12:9-44
 application
-ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:15:5-71:19
-INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:15:5-71:19
+ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:15:5-76:19
+INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:15:5-76:19
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\donal\.gradle\caches\9.0-milestone-1\transforms\d04bac929587a6df4ec1277c55e1827e\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\donal\.gradle\caches\9.0-milestone-1\transforms\d04bac929587a6df4ec1277c55e1827e\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\donal\.gradle\caches\9.0-milestone-1\transforms\6e61c423f5adcf6e233ea49500e12bba\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -185,30 +185,38 @@ ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:55:13-55
 	android:name
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:53:13-45
-activity#com.vinditscandit.nfctagmanager.ui.TagSelectionActivity
+activity#com.vinditscandit.nfctagmanager.ui.RegisterActivity
 ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:57:9-60:58
 	android:exported
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:59:13-37
 	android:theme
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:60:13-55
 	android:name
-		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:58:13-52
-activity#com.vinditscandit.nfctagmanager.ui.TagEditActivity
+		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:58:13-48
+activity#com.vinditscandit.nfctagmanager.ui.TagSelectionActivity
 ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:62:9-65:58
 	android:exported
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:64:13-37
 	android:theme
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:65:13-55
 	android:name
-		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:63:13-47
-activity#com.vinditscandit.nfctagmanager.ui.SettingsActivity
+		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:63:13-52
+activity#com.vinditscandit.nfctagmanager.ui.TagEditActivity
 ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:67:9-70:58
 	android:exported
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:69:13-37
 	android:theme
 		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:70:13-55
 	android:name
-		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:68:13-48
+		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:68:13-47
+activity#com.vinditscandit.nfctagmanager.ui.SettingsActivity
+ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:72:9-75:58
+	android:exported
+		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:74:13-37
+	android:theme
+		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:75:13-55
+	android:name
+		ADDED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml:73:13-48
 uses-sdk
 INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\donal\my-nfc-webapp\android\app\src\main\AndroidManifest.xml

@@ -36,9 +36,9 @@ class TagSelectionViewModel(application: Application) : AndroidViewModel(applica
             _error.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 val response = ApiClient.apiService.getTags(username, password)
                 
                 if (response.isSuccessful) {
@@ -97,9 +97,9 @@ class TagSelectionViewModel(application: Application) : AndroidViewModel(applica
             _error.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 // Delete each tag
                 tagIds.forEach { tagId ->
                     val response = ApiClient.apiService.deleteTag(tagId, username, password)

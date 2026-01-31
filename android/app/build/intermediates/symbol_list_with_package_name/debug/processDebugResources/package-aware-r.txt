@@ -3231,6 +3231,7 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id backButton
 id barrier
 id baseline
 id beginOnFirstDraw
@@ -3374,6 +3375,7 @@ id ghost_view
 id ghost_view_holder
 id gone
 id googleSignInButton
+id googleSignUpButton
 id graph
 id graph_wrap
 id group_divider
@@ -3423,6 +3425,7 @@ id listMode
 id list_item
 id loginButton
 id loginCard
+id loginLink
 id logoutButton
 id m3_side_sheet
 id marquee
@@ -3557,6 +3560,7 @@ id progress_horizontal
 id radio
 id ratio
 id rectangles
+id registerButton
 id registerFirstTagButton
 id registerLink
 id removeImageButton
@@ -3847,6 +3851,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_login
 layout activity_main
+layout activity_register
 layout activity_settings
 layout activity_tag_edit
 layout activity_tag_selection

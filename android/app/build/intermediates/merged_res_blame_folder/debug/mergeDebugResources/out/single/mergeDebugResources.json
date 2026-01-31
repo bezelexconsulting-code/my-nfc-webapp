@@ -1,82 +1,86 @@
 [
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/drawable_logo.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/drawable/logo.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/mipmap-xxhdpi/ic_launcher.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_activity_tag_edit.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\activity_tag_edit.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_activity_settings.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/activity_settings.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\drawable-mdpi_logo.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\drawable-mdpi\\logo.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/drawable-hdpi_logo.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/drawable-hdpi/logo.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\drawable-xxhdpi_logo.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\drawable-xxhdpi\\logo.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_dialog_help.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/dialog_help.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_dialog_change_password.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\dialog_change_password.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/drawable-xxhdpi_logo.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/drawable-xxhdpi/logo.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\mipmap-hdpi\\ic_launcher.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/drawable-xhdpi_logo.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/drawable-xhdpi/logo.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_activity_login.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\activity_login.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/mipmap-xxxhdpi/ic_launcher.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_activity_tag_selection.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\activity_tag_selection.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_activity_login.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/activity_login.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\mipmap-mdpi\\ic_launcher.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/mipmap-mdpi_ic_launcher.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/mipmap-mdpi/ic_launcher.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_dialog_nfc_error.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\dialog_nfc_error.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_dialog_change_password.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/dialog_change_password.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\mipmap-xhdpi\\ic_launcher.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/drawable-mdpi_logo.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/drawable-mdpi/logo.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\activity_main.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_dialog_nfc_error.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/dialog_nfc_error.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\drawable-xxxhdpi_logo.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\drawable-xxxhdpi\\logo.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_activity_main.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/activity_main.xml"
+        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_activity_register.xml.flat",
+        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/activity_register.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/mipmap-xhdpi/ic_launcher.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_dialog_help.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\dialog_help.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/mipmap-hdpi_ic_launcher.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/mipmap-hdpi/ic_launcher.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_activity_settings.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\activity_settings.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_activity_tag_edit.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/activity_tag_edit.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\drawable-hdpi_logo.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\drawable-hdpi\\logo.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/drawable-xxxhdpi_logo.png.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/drawable-xxxhdpi/logo.png"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\layout_item_tag.xml.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\layout\\item_tag.xml"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_item_tag.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/item_tag.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "com.vinditscandit.nfctagmanager.app-debug-39:/layout_activity_tag_selection.xml.flat",
-        "source": "com.vinditscandit.nfctagmanager.app-main-41:/layout/activity_tag_selection.xml"
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\drawable_logo.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\drawable\\logo.png"
+    },
+    {
+        "merged": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-debug-39:\\drawable-xhdpi_logo.png.flat",
+        "source": "C:\\Users\\donal\\.gradle\\daemon\\9.0-milestone-1\\com.vinditscandit.nfctagmanager.app-main-41:\\drawable-xhdpi\\logo.png"
     }
 ]

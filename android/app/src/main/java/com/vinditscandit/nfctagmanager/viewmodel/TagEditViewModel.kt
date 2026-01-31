@@ -50,9 +50,9 @@ class TagEditViewModel(application: Application) : AndroidViewModel(application)
             _success.value = false
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val request = com.vinditscandit.nfctagmanager.data.TagCreateRequest(
                     slug = slug,
@@ -112,9 +112,9 @@ class TagEditViewModel(application: Application) : AndroidViewModel(application)
             _error.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val response = ApiClient.apiService.getTag(tagId, username, password)
                 
@@ -146,9 +146,9 @@ class TagEditViewModel(application: Application) : AndroidViewModel(application)
             _success.value = false
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val response = ApiClient.apiService.updateTag(
                     tagId,
@@ -185,9 +185,9 @@ class TagEditViewModel(application: Application) : AndroidViewModel(application)
             _error.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 // Convert URI to File
                 val inputStream: InputStream? = context.contentResolver.openInputStream(uri)

@@ -56,9 +56,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             _success.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val response = ApiClient.apiService.updateProfile(
                     username,
@@ -96,9 +96,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             _success.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val response = ApiClient.apiService.changePassword(
                     username,
@@ -126,9 +126,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             _error.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val response = ApiClient.apiService.exportData(username, password)
                 
@@ -152,9 +152,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             _error.value = null
             
             try {
-                val username = prefsManager.getUsername() ?: ""
-                val password = prefsManager.getPassword() ?: ""
-                if (username.isEmpty() && password.isEmpty() && prefsManager.getAuthToken() == null) return@launch
+                val username = prefsManager.getUsername() ?: "token"
+                val password = prefsManager.getPassword() ?: "auth"
+                if (username == "token" && password == "auth" && prefsManager.getAuthToken() == null) return@launch
                 
                 val response = ApiClient.apiService.deleteAccount(username, password)
                 

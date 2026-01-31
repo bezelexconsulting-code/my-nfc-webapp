@@ -133,13 +133,15 @@ export async function POST(req) {
       // Continue execution - don't fail registration if email fails
     }
 
-    // Return success without exposing password
-    const { password: _, ...clientData } = newClient;
+    // Return success without exposing password (match login response format)
+    const { password: _, emailVerificationToken: __, emailVerificationExpiry: ___, resetToken: ____, resetTokenExpiry: _____, ...clientData } = newClient;
     
     return new Response(
       JSON.stringify({
+        success: true,
         message: "Registration successful! Please check your email to verify your account.",
         client: clientData,
+        tags: [],
         requiresVerification: true,
       }),
       { status: 201 }

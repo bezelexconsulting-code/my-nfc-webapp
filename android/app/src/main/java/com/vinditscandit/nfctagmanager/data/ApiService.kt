@@ -8,6 +8,9 @@ interface ApiService {
     @POST("login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
+    @POST("register")
+    suspend fun register(@Body request: RegisterRequest): Response<LoginResponse>
+
     @POST("auth/google")
     suspend fun loginWithGoogle(@Body request: GoogleLoginRequest): Response<LoginResponse>
     
@@ -88,6 +91,12 @@ data class LoginRequest(
 
 data class GoogleLoginRequest(
     val idToken: String
+)
+
+data class RegisterRequest(
+    val name: String,
+    val email: String,
+    val password: String
 )
 
 data class LoginResponse(

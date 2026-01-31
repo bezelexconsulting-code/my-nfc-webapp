@@ -131,6 +131,17 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/googleSignInButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign in with Google"
+                android:textColor="@color/gray_800"
+                app:strokeColor="@color/gray_400"
+                app:strokeWidth="1dp"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

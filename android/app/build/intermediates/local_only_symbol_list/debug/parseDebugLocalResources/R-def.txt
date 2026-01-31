@@ -4,7 +4,13 @@ color blue_100
 color blue_600
 color blue_900
 color gray_100
+color gray_200
+color gray_300
+color gray_400
 color gray_50
+color gray_500
+color gray_600
+color gray_700
 color gray_800
 color gray_900
 color teal_dark
@@ -37,6 +43,7 @@ id errorMessage
 id errorTitle
 id exportDataButton
 id forgotPasswordLink
+id googleSignInButton
 id headerLayout
 id helpButton
 id imagePreview

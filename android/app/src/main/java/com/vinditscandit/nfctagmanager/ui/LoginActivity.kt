@@ -121,9 +121,8 @@ class LoginActivity : AppCompatActivity() {
         }
         
         binding.registerLink.setOnClickListener {
-            // Open registration URL in browser
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = android.net.Uri.parse("https://tags.vinditscandit.co.za/register")
+            // Open in-app registration screen
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
         

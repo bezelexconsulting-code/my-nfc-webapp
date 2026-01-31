@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.vinditscandit.nfctagmanager.app-mergeDebugResources-36:/values-v31/values-v31.xml",
+            "outputFile": "com.vinditscandit.nfctagmanager.app-mergeDebugResources-37:/values-v31/values-v31.xml",
             "map": [
                 {
                     "source": "C:\\Users\\donal\\.gradle\\caches\\9.0-milestone-1\\transforms\\d04bac929587a6df4ec1277c55e1827e\\transformed\\material-1.11.0\\res\\values-v31\\values-v31.xml",

@@ -19,6 +19,16 @@ export default function Dashboard() {
   const [selectedTags, setSelectedTags] = useState(new Set());
   const [bulkMode, setBulkMode] = useState(false);
   const [uploadingImage, setUploadingImage] = useState({});
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newTagForm, setNewTagForm] = useState({
+    slug: "",
+    name: "",
+    phone1: "",
+    phone2: "",
+    address: "",
+    url: "",
+    instructions: "",
+  });
 
   // Load client + tags when session exists (session cookie sent automatically)
   useEffect(() => {
@@ -279,6 +289,71 @@ export default function Dashboard() {
     }
   }
 
+  async function createNewTag(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSaveSuccess("");
+
+    try {
+      // Validate slug
+      if (!newTagForm.slug || !newTagForm.slug.trim()) {
+        throw new Error("Slug is required");
+      }
+
+      // Create slug-friendly version (lowercase, no spaces, only alphanumeric and hyphens)
+      const cleanSlug = newTagForm.slug
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+      const res = await fetch("/api/client/tags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          ...newTagForm,
+          slug: cleanSlug,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create tag");
+      }
+
+      // Refresh client data
+      const refreshRes = await fetch("/api/client/me", { credentials: "include" });
+      const refreshData = await refreshRes.json();
+      if (refreshData.success && refreshData.client) {
+        setClient({
+          client: refreshData.client,
+          tags: refreshData.tags || [],
+          tagCount: refreshData.client.tagCount ?? (refreshData.tags?.length ?? 0),
+        });
+      }
+
+      // Reset form and close modal
+      setNewTagForm({
+        slug: "",
+        name: "",
+        phone1: "",
+        phone2: "",
+        address: "",
+        url: "",
+        instructions: "",
+      });
+      setShowCreateForm(false);
+      setSaveSuccess("Tag created successfully!");
+    } catch (err) {
+      setError(err.message || "Failed to create tag");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // Loading session
   if (status === "loading") {
     return (
@@ -460,6 +535,154 @@ export default function Dashboard() {
         {saveSuccess && (
           <div className="mb-4 rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-4 text-green-600 dark:text-green-400 text-sm">
             {saveSuccess}
+          </div>
+        )}
+
+        {/* Create New Tag Button - Always visible */}
+        <div className="mb-6">
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-base font-medium flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Create New Tag
+          </button>
+        </div>
+
+        {/* Create New Tag Modal */}
+        {showCreateForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Create New Tag</h2>
+                  <button
+                    onClick={() => setShowCreateForm(false)}
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <form onSubmit={createNewTag} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Slug (Unique ID) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={newTagForm.slug}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, slug: e.target.value })}
+                      placeholder="my-tag-id"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      required
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      This will be used in the URL: tags.vinditscandit.co.za/tag/your-slug
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      value={newTagForm.name}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, name: e.target.value })}
+                      placeholder="My Tag Name"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Primary Phone
+                    </label>
+                    <input
+                      type="tel"
+                      value={newTagForm.phone1}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, phone1: e.target.value })}
+                      placeholder="+27 12 345 6789"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Secondary Phone
+                    </label>
+                    <input
+                      type="tel"
+                      value={newTagForm.phone2}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, phone2: e.target.value })}
+                      placeholder="+27 12 345 6789"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      value={newTagForm.address}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, address: e.target.value })}
+                      placeholder="123 Main St, City"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Website URL
+                    </label>
+                    <input
+                      type="url"
+                      value={newTagForm.url}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, url: e.target.value })}
+                      placeholder="https://example.com"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Instructions
+                    </label>
+                    <textarea
+                      value={newTagForm.instructions}
+                      onChange={(e) => setNewTagForm({ ...newTagForm, instructions: e.target.value })}
+                      placeholder="Additional instructions or notes..."
+                      rows={4}
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-green-300 transition-colors duration-200 text-base font-medium"
+                    >
+                      {loading ? "Creating..." : "Create Tag"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateForm(false)}
+                      className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 text-base font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         )}
 

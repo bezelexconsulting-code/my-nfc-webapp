@@ -123,14 +123,14 @@ class LoginActivity : AppCompatActivity() {
         binding.registerLink.setOnClickListener {
             // Open registration URL in browser
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = android.net.Uri.parse("https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/register")
+            intent.data = android.net.Uri.parse("https://tags.vinditscandit.co.za/register")
             startActivity(intent)
         }
         
         binding.forgotPasswordLink.setOnClickListener {
             // Open forgot password URL in browser
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = android.net.Uri.parse("https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/client/forgot-password")
+            intent.data = android.net.Uri.parse("https://tags.vinditscandit.co.za/client/forgot-password")
             startActivity(intent)
         }
 

@@ -9,8 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    // Backend URL - Vercel deployment
-    private const val BASE_URL = "https://my-nfc-webapp-8q973rbco-donovans-projects-17201c26.vercel.app/api/"
+    // Backend URL - Production domain
+    private const val BASE_URL = "https://tags.vinditscandit.co.za/api/"
 
     var authToken: String? = null
         private set

@@ -72,6 +72,7 @@ export default function PublicTagPage({ params }) {
             </div>
           </div>
         </div>
+        </div>
 
         <div className="p-6">
           {tag.imageUrl && (

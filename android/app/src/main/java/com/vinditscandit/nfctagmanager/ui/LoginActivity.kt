@@ -18,6 +18,7 @@ import com.vinditscandit.nfctagmanager.utils.PreferencesManager
 import com.vinditscandit.nfctagmanager.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
+@Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityLoginBinding

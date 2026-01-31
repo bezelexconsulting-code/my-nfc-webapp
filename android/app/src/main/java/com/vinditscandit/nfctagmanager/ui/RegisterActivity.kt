@@ -16,6 +16,7 @@ import com.vinditscandit.nfctagmanager.databinding.ActivityRegisterBinding
 import com.vinditscandit.nfctagmanager.utils.PreferencesManager
 import com.vinditscandit.nfctagmanager.viewmodel.RegisterViewModel
 
+@Suppress("DEPRECATION")
 class RegisterActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityRegisterBinding

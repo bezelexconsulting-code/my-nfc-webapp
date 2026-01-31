@@ -21,7 +21,6 @@ export default function Dashboard() {
   const [uploadingImage, setUploadingImage] = useState({});
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newTagForm, setNewTagForm] = useState({
-    slug: "",
     name: "",
     phone1: "",
     phone2: "",
@@ -296,25 +295,62 @@ export default function Dashboard() {
     setSaveSuccess("");
 
     try {
-      // Validate slug
-      if (!newTagForm.slug || !newTagForm.slug.trim()) {
-        throw new Error("Slug is required");
+      // Validate name
+      if (!newTagForm.name || !newTagForm.name.trim()) {
+        throw new Error("Name is required");
       }
 
-      // Create slug-friendly version (lowercase, no spaces, only alphanumeric and hyphens)
-      const cleanSlug = newTagForm.slug
+      // Generate base slug from name (lowercase, replace spaces with hyphens, remove special characters)
+      const baseSlug = newTagForm.name
         .toLowerCase()
-        .replace(/[^a-z0-9-]/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
+        .replace(/[^a-z0-9\s-]/g, "") // Remove special characters except spaces and hyphens
+        .replace(/\s+/g, "-") // Replace spaces with hyphens
+        .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+        .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
 
+      if (!baseSlug) {
+        throw new Error("Name must contain at least one letter or number");
+      }
+
+      // Check for uniqueness and find available slug
+      let slug = baseSlug;
+      let attempt = 0;
+      let isUnique = false;
+
+      while (!isUnique && attempt < 100) {
+        // Check if slug exists
+        const existingTags = client.tags || [];
+        const slugExists = existingTags.some(tag => tag.slug === slug);
+
+        if (!slugExists) {
+          // Also check with the API to be sure
+          const checkRes = await fetch(`/api/${slug}`, { credentials: "include" });
+          if (checkRes.status === 404) {
+            isUnique = true;
+          } else {
+            // Slug exists, try next number
+            attempt++;
+            slug = `${baseSlug}-${attempt}`;
+          }
+        } else {
+          // Slug exists locally, try next number
+          attempt++;
+          slug = `${baseSlug}-${attempt}`;
+        }
+      }
+
+      if (!isUnique) {
+        throw new Error("Could not generate a unique slug. Please try a different name.");
+      }
+
+      // Create the tag with the unique slug
       const res = await fetch("/api/client/tags", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           ...newTagForm,
-          slug: cleanSlug,
+          slug: slug,
         }),
       });
 
@@ -337,7 +373,6 @@ export default function Dashboard() {
 
       // Reset form and close modal
       setNewTagForm({
-        slug: "",
         name: "",
         phone1: "",
         phone2: "",
@@ -346,7 +381,7 @@ export default function Dashboard() {
         instructions: "",
       });
       setShowCreateForm(false);
-      setSaveSuccess("Tag created successfully!");
+      setSaveSuccess(`Tag created successfully! URL: tags.vinditscandit.co.za/tag/${slug}`);
     } catch (err) {
       setError(err.message || "Failed to create tag");
     } finally {
@@ -571,32 +606,32 @@ export default function Dashboard() {
                 <form onSubmit={createNewTag} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Slug (Unique ID) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={newTagForm.slug}
-                      onChange={(e) => setNewTagForm({ ...newTagForm, slug: e.target.value })}
-                      placeholder="my-tag-id"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                      required
-                    />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      This will be used in the URL: tags.vinditscandit.co.za/tag/your-slug
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Name
+                      Tag Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={newTagForm.name}
                       onChange={(e) => setNewTagForm({ ...newTagForm, name: e.target.value })}
-                      placeholder="My Tag Name"
+                      placeholder="My Generator"
                       className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      required
                     />
+                    {newTagForm.name && (
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        URL Preview: tags.vinditscandit.co.za/tag/{newTagForm.name
+                          .toLowerCase()
+                          .replace(/[^a-z0-9\s-]/g, "")
+                          .replace(/\s+/g, "-")
+                          .replace(/-+/g, "-")
+                          .replace(/^-|-$/g, "") || "..."}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      A unique URL will be automatically created from this name
+                    </p>
                   </div>
 
                   <div>

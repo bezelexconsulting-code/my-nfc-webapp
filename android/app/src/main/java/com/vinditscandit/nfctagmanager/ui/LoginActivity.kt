@@ -3,9 +3,16 @@ package com.vinditscandit.nfctagmanager.ui
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.vinditscandit.nfctagmanager.BuildConfig
+import com.vinditscandit.nfctagmanager.data.ApiClient
 import com.vinditscandit.nfctagmanager.databinding.ActivityLoginBinding
 import com.vinditscandit.nfctagmanager.utils.PreferencesManager
 import com.vinditscandit.nfctagmanager.viewmodel.LoginViewModel
@@ -16,6 +23,23 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var prefsManager: PreferencesManager
+    private lateinit var googleSignInClient: GoogleSignInClient
+    
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            account?.idToken?.let { idToken ->
+                viewModel.loginWithGoogle(idToken)
+            } ?: run {
+                Toast.makeText(this, "Failed to get Google ID token", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: ApiException) {
+            Toast.makeText(this, "Google sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +48,13 @@ class LoginActivity : AppCompatActivity() {
         
         prefsManager = PreferencesManager(this)
         
-        // Check if user is already logged in
-        if (prefsManager.getUsername() != null && prefsManager.getPassword() != null) {
+        // Initialize Google Sign-In
+        initGoogleSignIn()
+        
+        // Check if user is already logged in (credentials or token)
+        if ((prefsManager.getUsername() != null && prefsManager.getPassword() != null) || prefsManager.getAuthToken() != null) {
+            // Set auth token if exists
+            prefsManager.getAuthToken()?.let { ApiClient.setAuthToken(it) }
             navigateToMain()
             return
         }
@@ -106,13 +135,17 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.googleSignInButton?.setOnClickListener {
-            val client = googleSignInClient
-            if (client != null) {
-                googleSignInLauncher.launch(client.signInIntent)
-            } else {
-                Toast.makeText(this, "Google Sign-In not configured", Toast.LENGTH_SHORT).show()
-            }
+            googleSignInLauncher.launch(googleSignInClient.signInIntent)
         }
+    }
+    
+    private fun initGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.GOOGLE_ANDROID_CLIENT_ID)
+            .requestEmail()
+            .build()
+        
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
     
     private fun navigateToMain() {

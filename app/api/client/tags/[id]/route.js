@@ -3,6 +3,43 @@ import { getClientFromRequest } from "../../../../../lib/auth";
 
 const prisma = new PrismaClient();
 
+// GET a single tag (client can only read their own tags)
+export async function GET(req, { params }) {
+  try {
+    const { error, status, client } = await getClientFromRequest(req);
+    if (error) {
+      return new Response(JSON.stringify({ error }), { status });
+    }
+
+    const { id } = await params;
+    const tag = await prisma.tag.findFirst({
+      where: {
+        id: parseInt(id),
+        clientId: client.id,
+      },
+    });
+
+    if (!tag) {
+      return new Response(JSON.stringify({ error: "Tag not found" }), {
+        status: 404,
+      });
+    }
+
+    return new Response(JSON.stringify(tag), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    const { id } = await params;
+    console.error(`GET /api/client/tags/${id} error:`, error);
+    return new Response(
+      JSON.stringify({ error: "Failed to load tag", details: error.message }),
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 // UPDATE a tag (client can only update their own tags)
 export async function PUT(req, { params }) {
   try {

@@ -20,6 +20,10 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "NFC Tag Manager",
   description: "Manage your NFC tags with ease",
+  icons: {
+    icon: "/FindIT.png",
+    apple: "/FindIT.png",
+  },
 };
 
 export const viewport = {

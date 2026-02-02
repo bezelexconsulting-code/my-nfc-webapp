@@ -30,6 +30,17 @@ export default function Dashboard() {
     instructions: "",
   });
 
+  // Auto-slug from name: lowercase, spaces → hyphens, remove special characters (no slug field in UI)
+  function slugFromName(name) {
+    if (!name || !String(name).trim()) return "";
+    return String(name)
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+
   // Load client + tags when session exists (session cookie sent automatically)
   useEffect(() => {
     if (status !== "authenticated" || !session) {
@@ -63,6 +74,29 @@ export default function Dashboard() {
       setTagForms(forms);
     }
   }, [client]);
+
+  // When entering edit mode, seed form from currentTag so fields are never empty
+  useEffect(() => {
+    if (editingTagId != null && client?.tags) {
+      const currentTag = client.tags.find((t) => t.id === editingTagId);
+      if (currentTag) {
+        setTagForms((prev) => ({
+          ...prev,
+          [currentTag.id]: {
+            name: currentTag.name ?? "",
+            phone1: currentTag.phone1 ?? "",
+            phone2: currentTag.phone2 ?? "",
+            address: currentTag.address ?? "",
+            url: currentTag.url ?? "",
+            instructions: currentTag.instructions ?? "",
+            imageUrl: currentTag.imageUrl ?? null,
+            slug: currentTag.slug,
+            id: currentTag.id,
+          },
+        }));
+      }
+    }
+  }, [editingTagId, client?.tags]);
 
   // Filter and sort tags
   useEffect(() => {
@@ -322,13 +356,8 @@ export default function Dashboard() {
         throw new Error("Name is required");
       }
 
-      // Generate base slug from name (lowercase, replace spaces with hyphens, remove special characters)
-      const baseSlug = newTagForm.name
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "") // Remove special characters except spaces and hyphens
-        .replace(/\s+/g, "-") // Replace spaces with hyphens
-        .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
-        .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
+      // Auto-slug from name (user never sees or edits slug)
+      const baseSlug = slugFromName(newTagForm.name);
 
       if (!baseSlug) {
         throw new Error("Name must contain at least one letter or number");
@@ -403,7 +432,7 @@ export default function Dashboard() {
         instructions: "",
       });
       setShowCreateForm(false);
-      setSaveSuccess(`Tag created successfully! URL: tags.vinditscandit.co.za/tag/${slug}`);
+      setSaveSuccess(`Tag created successfully! URL: tags.vinditscandit.co.za/public-tag/${slug}`);
     } catch (err) {
       setError(err.message || "Failed to create tag");
     } finally {
@@ -626,7 +655,7 @@ export default function Dashboard() {
                 </div>
 
                 <form onSubmit={createNewTag} className="space-y-4">
-                  <div>
+                  <div className="w-full">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Tag Name <span className="text-red-500">*</span>
                     </label>
@@ -640,49 +669,45 @@ export default function Dashboard() {
                     />
                     {newTagForm.name && (
                       <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        URL Preview: tags.vinditscandit.co.za/tag/{newTagForm.name
-                          .toLowerCase()
-                          .replace(/[^a-z0-9\s-]/g, "")
-                          .replace(/\s+/g, "-")
-                          .replace(/-+/g, "-")
-                          .replace(/^-|-$/g, "") || "..."}
+                        URL preview: tags.vinditscandit.co.za/public-tag/{slugFromName(newTagForm.name) || "..."}
                       </p>
                     )}
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      A unique URL will be automatically created from this name
+                      The URL is generated from the tag name (lowercase, spaces → hyphens). If it’s already taken, a number is added (e.g. my-tag-1).
                     </p>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Primary Phone
-                    </label>
-                    <input
-                      type="tel"
-                      value={newTagForm.phone1}
-                      onChange={(e) => setNewTagForm({ ...newTagForm, phone1: e.target.value })}
-                      placeholder="+27 12 345 6789"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Primary Phone
+                      </label>
+                      <input
+                        type="tel"
+                        value={newTagForm.phone1}
+                        onChange={(e) => setNewTagForm({ ...newTagForm, phone1: e.target.value })}
+                        placeholder="+27 12 345 6789"
+                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Secondary Phone
+                      </label>
+                      <input
+                        type="tel"
+                        value={newTagForm.phone2}
+                        onChange={(e) => setNewTagForm({ ...newTagForm, phone2: e.target.value })}
+                        placeholder="+27 12 345 6789"
+                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Secondary Phone
-                    </label>
-                    <input
-                      type="tel"
-                      value={newTagForm.phone2}
-                      onChange={(e) => setNewTagForm({ ...newTagForm, phone2: e.target.value })}
-                      placeholder="+27 12 345 6789"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                    />
-                  </div>
-
-                  <div>
+                  <div className="w-full">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Address
                     </label>
@@ -695,7 +720,7 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  <div>
+                  <div className="w-full">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Website URL
                     </label>
@@ -708,7 +733,7 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  <div>
+                  <div className="w-full">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Instructions
                     </label>
@@ -852,33 +877,35 @@ export default function Dashboard() {
                   </div>
                 )}
                 
-                {/* Card View (Read-Only) */}
+                {/* Card View (Read-Only) - Vertical layout */}
                 {!bulkMode && editingTagId !== tag.id && (
                   <>
-                    {/* Tag Header with Image */}
-                    <div className="flex items-start gap-4 mb-4">
+                    {/* Header row: image + title + timestamp */}
+                    <div className="flex items-center gap-4 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                       <div className="flex-shrink-0">
                         {tag.imageUrl ? (
                           <img
                             src={tag.imageUrl}
                             alt={tag.name}
-                            className="w-16 h-16 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600"
+                            className="w-14 h-14 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600"
                           />
                         ) : (
-                          <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                             </svg>
                           </div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 truncate">{tag.name || tag.slug}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Added {new Date(tag.createdAt).toLocaleDateString()}</p>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate">{tag.name || tag.slug}</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {new Date(tag.updatedAt || tag.createdAt).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}
+                        </p>
                       </div>
                     </div>
 
-                    {/* Tag Info List */}
+                    {/* Data rows: phone, address, instructions - each with icon */}
                     <div className="space-y-3 mb-6">
                       {tag.phone1 && (
                         <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
@@ -915,106 +942,105 @@ export default function Dashboard() {
                       )}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Bottom: two large buttons side-by-side + small red trash icon */}
+                    <div className="flex items-center gap-3">
                       <a
                         href={`/tag/${tag.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-200 font-medium text-base"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
-                        View Public Page
+                        Write to Tag
                       </a>
                       <button
                         onClick={() => setEditingTagId(tag.id)}
-                        className="px-6 py-3 bg-white dark:bg-gray-700 border-2 border-teal-600 dark:border-teal-500 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 font-medium"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-white dark:bg-gray-700 border-2 border-teal-600 dark:border-teal-500 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 font-medium text-base"
                       >
                         Edit
                       </button>
-                    </div>
-                    
-                    {/* Delete Button */}
-                    <button
-                      onClick={async () => {
-                        if (confirm(`Are you sure you want to delete "${tag.name || tag.slug}"? This action cannot be undone.`)) {
-                          setLoading(true);
-                          try {
-                            const res = await fetch(`/api/client/tags/${tag.id}`, {
-                              method: "DELETE",
-                              credentials: 'include',
-                            });
-                            if (res.ok) {
-                              await refreshClientData();
-                              setSaveSuccess("Tag deleted successfully!");
-                            } else {
-                              throw new Error("Failed to delete tag");
+                      <button
+                        onClick={async () => {
+                          if (confirm(`Are you sure you want to delete "${tag.name || tag.slug}"? This action cannot be undone.`)) {
+                            setLoading(true);
+                            try {
+                              const res = await fetch(`/api/client/tags/${tag.id}`, {
+                                method: "DELETE",
+                                credentials: 'include',
+                              });
+                              if (res.ok) {
+                                await refreshClientData();
+                                setSaveSuccess("Tag deleted successfully!");
+                              } else {
+                                throw new Error("Failed to delete tag");
+                              }
+                            } catch (err) {
+                              setError(err.message || "Failed to delete tag");
+                            } finally {
+                              setLoading(false);
                             }
-                          } catch (err) {
-                            setError(err.message || "Failed to delete tag");
-                          } finally {
-                            setLoading(false);
                           }
-                        }
-                      }}
-                      className="mt-2 w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Delete Tag
-                    </button>
+                        }}
+                        className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                        aria-label="Delete tag"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </>
                 )}
 
-                {/* Edit Form */}
+                {/* Edit Form - currentTag synced via useEffect; layout: Name/Address/Instructions full-width, phones two-column */}
                 {!bulkMode && editingTagId === tag.id && (
                 <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); updateTag(tag.id, tagForms[tag.id]); setEditingTagId(null); }}>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
+                  <div className="space-y-4">
+                    <div className="w-full">
                       <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         Name
                       </label>
                       <input
                         type="text"
-                        value={tagForms[tag.id]?.name || ""}
+                        value={tagForms[tag.id]?.name ?? ""}
                         onChange={(e) => handleInputChange(tag.id, 'name', e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation"
                       />
                     </div>
-                    
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Phone 1
-                      </label>
-                      <input
-                        type="tel"
-                        value={tagForms[tag.id]?.phone1 || ""}
-                        onChange={(e) => handleInputChange(tag.id, 'phone1', e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation"
-                      />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Primary Phone
+                        </label>
+                        <input
+                          type="tel"
+                          value={tagForms[tag.id]?.phone1 ?? ""}
+                          onChange={(e) => handleInputChange(tag.id, 'phone1', e.target.value)}
+                          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Secondary Phone
+                        </label>
+                        <input
+                          type="tel"
+                          value={tagForms[tag.id]?.phone2 ?? ""}
+                          onChange={(e) => handleInputChange(tag.id, 'phone2', e.target.value)}
+                          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation"
+                        />
+                      </div>
                     </div>
-                    
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Phone 2
-                      </label>
-                      <input
-                        type="tel"
-                        value={tagForms[tag.id]?.phone2 || ""}
-                        onChange={(e) => handleInputChange(tag.id, 'phone2', e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation"
-                      />
-                    </div>
-                    
-                    <div>
+
+                    <div className="w-full">
                       <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         Address <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
                       </label>
                       <textarea
-                        value={tagForms[tag.id]?.address || ""}
+                        value={tagForms[tag.id]?.address ?? ""}
                         onChange={(e) => handleInputChange(tag.id, 'address', e.target.value)}
                         placeholder="Enter address (optional)"
                         className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation resize-none"
@@ -1022,12 +1048,12 @@ export default function Dashboard() {
                       />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div className="w-full">
                       <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         Instructions
                       </label>
                       <textarea
-                        value={tagForms[tag.id]?.instructions || ""}
+                        value={tagForms[tag.id]?.instructions ?? ""}
                         onChange={(e) => handleInputChange(tag.id, 'instructions', e.target.value)}
                         placeholder="Add instructions for visitors..."
                         className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 touch-manipulation resize-none"
@@ -1035,7 +1061,7 @@ export default function Dashboard() {
                       />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div className="w-full">
                       <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         Image <span className="text-gray-500 font-normal">(optional)</span>
                       </label>

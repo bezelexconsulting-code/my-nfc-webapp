@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue_100">#DBEAFE</color>
+    <color name="blue_600">#2563EB</color>
+    <color name="blue_900">#1E3A8A</color>
+    <color name="gray_100">#F3F4F6</color>
+    <color name="gray_200">#E5E7EB</color>
+    <color name="gray_300">#D1D5DB</color>
+    <color name="gray_400">#9CA3AF</color>
+    <color name="gray_50">#F9FAFB</color>
+    <color name="gray_500">#6B7280</color>
+    <color name="gray_600">#4B5563</color>
+    <color name="gray_700">#374151</color>
+    <color name="gray_800">#1F2937</color>
+    <color name="gray_900">#111827</color>
+    <color name="teal_dark">#0F766E</color>
+    <color name="teal_light">#5EEAD4</color>
+    <color name="teal_primary">#14B8A6</color>
+    <color name="teal_secondary">#0D9488</color>
+    <string name="app_name">Vinditscandit</string>
+    <string name="biometric_enabled">Biometric Login Enabled</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="email_or_username">Email or Username</string>
+    <string name="error_login_failed">Login failed. Please check your credentials.</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_unknown">An unexpected error occurred</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login_button">Login</string>
+    <string name="login_title">Login</string>
+    <string name="logout">Logout</string>
+    <string name="my_tags">My Tags</string>
+    <string name="nfc_disabled">Please enable NFC in settings</string>
+    <string name="nfc_not_available">NFC is not available on this device</string>
+    <string name="no_tags">No tags available. Create tags in the web dashboard.</string>
+    <string name="password">Password</string>
+    <string name="register_link">Don\'t have an account? Register here</string>
+    <string name="select_tag">Select Tag</string>
+    <string name="select_tag_to_write">Select Tag to Write</string>
+    <string name="settings">Settings</string>
+    <string name="share_url">Share</string>
+    <string name="tag_url_copied">Tag URL copied to clipboard!</string>
+    <string name="tag_url_title">Your Tag URL</string>
+    <string name="tagline">Tap To Send Me Home</string>
+    <string name="tap_nfc_tag">Tap NFC Tag to Write</string>
+    <string name="welcome">Welcome</string>
+    <string name="write_failed">Failed to write to NFC tag</string>
+    <string name="write_success">Successfully wrote to NFC tag!</string>
+    <string name="writing_to_tag">Writing to tag…</string>
+    <style name="Theme.NFCTagManager" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/blue_600</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryContainer">@color/blue_100</item>
+        <item name="colorOnPrimaryContainer">@color/blue_900</item>
+    </style>
+</resources>
